@@ -31,7 +31,7 @@ let calc_for_sheets_Checker = (function(formId){
         formComp,
         view;
 
-    let evet_btns;
+    let event_btns;
 
 //==================================================================
     let error = null,
@@ -548,7 +548,7 @@ let calc_for_sheets_Checker = (function(formId){
 
     let modal = view().animation.toggleModal();
 
-    evet_btns = [
+    event_btns = [
 
         {
             dom_key: "#js-Btn--forBack",
@@ -574,7 +574,7 @@ let calc_for_sheets_Checker = (function(formId){
     ]
 
 
-    _.map(evet_btns, function (btn) {
+    _.map(event_btns, function (btn) {
         setBtnEvent(btn);
     });
 
