@@ -100,7 +100,6 @@ let calc_for_sheets_Checker = (function(formId){
 
     pipelineWithResrouce = function (resource) {
         let funcs = _.tail(arguments)[0]
-     
         return function () {
             
             let resource_func = function (data) {
@@ -167,7 +166,6 @@ let calc_for_sheets_Checker = (function(formId){
         //     width: values.height,
         // }
         excute = function (target) {
-       
              _.map(target, function(value, key){
                 return baseCalc(key, value)
            });
@@ -287,7 +285,7 @@ let calc_for_sheets_Checker = (function(formId){
           
             if (error == null) {
                 $(error_key).text("");
-                form_data = return_obj;
+                form_data = _.clone(return_obj);
                 return return_obj;
             }
 
@@ -349,7 +347,7 @@ let calc_for_sheets_Checker = (function(formId){
 
         let config,
             handlers,
-            displayModal;
+            animation;
         //==================================================================
         //==================================================================
         //==================================================================
@@ -372,34 +370,44 @@ let calc_for_sheets_Checker = (function(formId){
                 return function () {
                     target.dom.on(btn_obj.event, function() {
                         
-                        func(target, btn_obj);                        
-                        that.change_colors(target, btn_obj.colors);
+                        func(target, btn_obj);
+                        if (btn_obj.colors !=null) {
+                            if (Object.keys(btn_obj.colors).length > 0) {
+                                that.change_colors(target, btn_obj.colors);
+                            }
+                        }
                         target.active_flag = that.toggleFlag(target);
                     })
                 }
             },
         }
 
-        displayModal = function () {
+        animation = {
+          
+            toggleModal: function () {
+                let dom = $("#js-Modal")
+                return function (data = null) {
+                    dom.toggleClass("isActive");
+                    return data;
+                }
 
-            return function () {
-                //Modal表示
-            }
+            },
+
+            startLoading: function () {
+
+                return function () {
+                    
+                }
+            },
+
+            stopLoading: function () {
+
+                return function () {
+                    
+                }
+            },
         }
 
-        let startLoading = function () {
-
-            return function () {
-                
-            }
-        }
-
-        let stopLoading = function () {
-
-            return function () {
-                
-            }
-        }
         let displayResult = function () {
 
             return function () {
@@ -464,23 +472,19 @@ let calc_for_sheets_Checker = (function(formId){
                 let form_dom = $(formId);
                 let result = pipelineWithResrouce(btn_obj.resource, btn_obj.methods)();
             },
-    
-            // loadingAnime: function () {
-                
-            //     let start,
-            //         stop;
-    
-            //     return {
-            //         start: start,
-            //         stop: stop,
-            //     }
-            // },
+
+            closeModal: function (target, btn_obj) {
+                console.log("closeModal")
+                btn_obj.methods[0]();
+            }
+
         }
 
         //==================================================================
         return {
             config: config,
             handlers: handlers,
+            animation: animation,
         }
     }
 
@@ -493,6 +497,8 @@ let calc_for_sheets_Checker = (function(formId){
 
 //==================================================================
     //以下、メインロジック起動
+    
+
     error_key = "#js-Error"
     errors = {
         ERROR1: "⚠数字を入力してください。",
@@ -540,6 +546,8 @@ let calc_for_sheets_Checker = (function(formId){
         }
     }
 
+    let modal = view().animation.toggleModal();
+
     evet_btns = [
 
         {
@@ -554,7 +562,14 @@ let calc_for_sheets_Checker = (function(formId){
             colors: btn_colors2,
             event: "click",
             handler: "calcNumbersOfSheets",
-            methods: [getFormValues(formValue), sheets().calcStart, function(){console.log(remainder_result)}]
+            methods: [getFormValues(formValue), modal, sheets().calcStart,]
+        },
+
+        {
+            dom_key: "#js-Close-Modal",
+            event: "click",
+            handler: "closeModal",
+            methods: [modal]
         }
     ]
 

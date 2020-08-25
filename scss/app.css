@@ -1,3 +1,8 @@
+.l-Checker > * {
+  position: static;
+  z-index: 0;
+}
+
 .l-Checker .u-Container {
   max-width: 1024px;
   margin-left: auto;
@@ -26,7 +31,30 @@
   padding-bottom: 40px;
 }
 
+.l-Checker .m-Modal {
+  position: fixed !important;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(128, 128, 128, 0.5);
+  transform: translateX(-100%);
+  z-index: 1;
+}
+
+.l-Checker .m-Modal.isActive {
+  transform: translateX(0);
+}
+
+.l-Checker .m-Modal .a-Btn.forClose {
+  position: absolute;
+  right: 0;
+}
+
 .l-Checker .a-Btn {
+  display: inline-block;
   padding: 20px;
   cursor: pointer;
 }
@@ -37,6 +65,10 @@
 
 .l-Checker .a-Btn.forCalc {
   background: skyblue;
+}
+
+.l-Checker .a-Btn.forClose {
+  color: #fff;
 }
 
 .l-Checker .c-Result > * {
