@@ -1,5 +1,8 @@
 let calc_for_sheets_Checker = (function(formId){
 
+    //計算結果を格納するオブジェクト
+    let result_obj = {}
+    
     //環境変数
     let error;
     let DENOMINATOR = function () {
@@ -13,8 +16,10 @@ let calc_for_sheets_Checker = (function(formId){
     let setError,
         ajaxFunc,
         pipeline,
+        pipelineWithResrouce,
         setEventHandler,
-        target_btn;
+        target_btn,
+        getFormValues;
 
     //内部モジュール関数
     let sheetsCalc, 
@@ -33,6 +38,12 @@ let calc_for_sheets_Checker = (function(formId){
 //==================================================================
 //==================================================================
     //以下、ユーティリティ
+    getFormValues = function (formValue) {
+        return function () {
+            return formComp().getFormValues(formValue);
+        }
+    }
+
     target_btn = function(target) {
         return {
             active_flag: false,
@@ -78,9 +89,9 @@ let calc_for_sheets_Checker = (function(formId){
         }
     }
 
-    let pipelineWithResrouce = function (resource) {
+    pipelineWithResrouce = function (resource) {
         let funcs = _.tail(arguments)[0]
-
+     
         return function () {
             
             let resource_func = function (data) {
@@ -92,8 +103,8 @@ let calc_for_sheets_Checker = (function(formId){
             }
 
             let result = _.reduce(funcs, function(data, func){
-                let resource = resource_func(data);
-                return func(resource);
+                let resource_data = resource_func(data);
+                return func(resource_data);
             }, {})
 
             return result;
@@ -112,7 +123,7 @@ let calc_for_sheets_Checker = (function(formId){
                         btn_obj
                     );
 
-        let pipe = pipeline(handler)();
+        pipeline(handler)();
          
     }
     
@@ -125,9 +136,10 @@ let calc_for_sheets_Checker = (function(formId){
     //以下、メインロジック定義
 
     sheetsCalc = function (target) {
-
+     
         let baseCalc,
-            remainderCalc;
+            remainderCalc,
+            calcAllSheet;
         let denominator = DENOMINATOR();
         let Numerator = NUMERATOR();
         //==================================================================
@@ -135,24 +147,33 @@ let calc_for_sheets_Checker = (function(formId){
 
         let command_name = "start";
         let excute;
-        
+
+        // target = {
+        //     height: values.height,
+        //     width: values.height,
+        // }
         excute = function (target) {
-            console.log(command_name);
-            // target = {
-            //     height: values.height,
-            //     width: values.height,
-            // }
+            console.log(command_name)
+            console.log(target)
 
             //xとy
-            let base_data = _.map(target, function(key, value){
+            
+             _.map(target, function(value, key){
                 return baseCalc(key, value)
            });
 
            //bとc: 余りのの処理
-           let remainder_calc = _.map(target,function(key, value){
+           _.map(target,function(value, key){
             return remainderCalc(key, value);
            })
+           
+           calcAllSheet();
 
+           console.log(result_obj)
+           let keys = Object.keys(result_obj);
+           for (let i = 0; i < keys.length; ++i) {
+            $("#js-value-" + keys[i]).text(result_obj[keys[i]])
+           } 
             //    return result
             return
         }
@@ -162,15 +183,30 @@ let calc_for_sheets_Checker = (function(formId){
         //==================================================================
 
         baseCalc = function (key, value) {
-            let obj = {};
-            obj[key] = (value - denominator)/ Numerator;
-            return obj;
+            let result = (value - denominator)/ Numerator;
+
+            if (key == "height") {
+                result_obj["x"] = result;
+            
+            } else if (key == "width") {
+                result_obj["y"] = result;
+            }
+            
         }
 
         remainderCalc = function (key, value) {
-            let obj = {};
-            obj[key] = (value - denominator)% Numerator;
-            return obj;
+            let result = (value - denominator)% Numerator;
+
+            if (key == "height") {
+                result_obj["b"] = result;
+            
+            } else if (key == "width") {
+                result_obj["c"] = result;
+            }
+        }
+
+        calcAllSheet = function () {
+            result_obj["a"] = result_obj["x"]*result_obj["y"];
         }
 
         //==================================================================
@@ -183,38 +219,28 @@ let calc_for_sheets_Checker = (function(formId){
         
         let toHalfWidth,
             validate,
-            checkType,
-            retrieveFormValues;
+            checkType;
         //==================================================================
         //==================================================================
 
         let command_name = "getFormValues";
-        let excute = function () {
-            console.log(command_name);
-            let values = _.map( retrieveFormValues(), validate);
-            
-            if (!error) {
-                return {
-                    height: values.height,
-                    width: values.height,
-                }
+
+        let excute = function (retrieveFormValues) {
+            let return_obj = {};
+
+            _.map( retrieveFormValues(), function (value, key) {
+                let result = validate(value);
+                return_obj[key] = result;
+            });
+ 
+            if (error == null) {
+                return return_obj;
             }
         }
 
         //==================================================================
         //==================================================================
         //==================================================================
-         //クロージャー内のフォームの値を更新
-        retrieveFormValues = function () {
-            let height = $("#vertical").val();
-            let width = $("#horizontal").val();
-
-            return {
-                height: height,
-                width: width,
-            }
-        }
-
         toHalfWidth = function (string_num) {
             return string_num.replace(/./g, s => {
               return String.fromCharCode(s.charCodeAt(0) - 0xfee0)
@@ -235,21 +261,21 @@ let calc_for_sheets_Checker = (function(formId){
         //return undifined or Number
         validate = function (target) {
 
-           
-            //文字列に変換
+           return target;
+            // //文字列に変換
             
-            //半角数字判定
-            if (checkType("/[1-9]/", target)) {
-                return parseInt(target, 10)
+            // //半角数字判定
+            // if (checkType("/[1-9]/", target)) {
+            //     return parseInt(target, 10)
                 
-            }
-            //全角数字判定
-            if (checkType("/[１-9]/", target)) {
-                target = toHalfWidth(target)
-                return parseInt(target, 10);
-            }
+            // }
+            // //全角数字判定
+            // if (checkType("/[１-9]/", target)) {
+            //     target = toHalfWidth(target)
+            //     return parseInt(target, 10);
+            // }
             
-            setError(ERROR1);
+            // setError(ERROR1);
         }
 
         //==================================================================
@@ -338,6 +364,15 @@ let calc_for_sheets_Checker = (function(formId){
 //==================================================================
     //以下、メインロジック起動
 
+    let formValue = function () {
+        let height = $("#vertical").val();
+        let width = $("#horizontal").val();
+
+        return {
+            height: height,
+            width: width,
+        }
+    }
 
     //1. 各種ボタンのイベント設定
     let btn_colors1 = {
@@ -385,7 +420,7 @@ let calc_for_sheets_Checker = (function(formId){
             colors: btn_colors2,
             event: "click",
             handler: "calcNumbersOfSheets",
-            methods: [formComp().getFormValues, sheetsCalc().start]
+            methods: [getFormValues(formValue), sheetsCalc().start]
         }
     ]
 

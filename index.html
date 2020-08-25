@@ -58,6 +58,39 @@
 		display: inline-block;
 		margin: auto;
 	}
+	.c-Result > * {
+		margin-top: 20px;
+		text-align: left;
+	}
+	.u-Container {
+		max-width: 1024px;
+		margin-left: auto;
+		margin-right: auto;
+	}
+	.m-Result-Area {
+		margin-top: 60px;
+		margin-bottom: 60px;
+		background: gray;
+		padding-left: 10%;
+		padding-right: 10%;
+
+		color: #fff;
+	}
+	.c-Result span {
+		font-size: 16px;
+		font-weight: normal;
+		padding-left: 20px;
+	}
+	.c-Result > * {
+		font-size: 20px;
+		font-weight: bold;
+	}
+	.m-Result-Area > * {
+		padding-top: 40px;
+	}
+	.m-Result-Area > .c-Result {
+		padding-bottom: 40px;
+	}
 </style>
 </head>
 
@@ -109,6 +142,16 @@
 				<div id="js-Btn--forCalc" class="a-Btn forCalc">計算する</div>
 			</div>
 		</form>
+		<section class="u-Container m-Result-Area">
+			<h2>結果表示</h2>
+			<ul class="c-Result">
+				<li>x: <span id="js-value-x">0</span></li>
+				<li>y: <span id="js-value-y">0</span></li>
+				<li>a: <span id="js-value-a">0</span></li>
+				<li>b: <span id="js-value-b">0</span></li>
+				<li>c: <span id="js-value-c">0</span></li>
+			</ul>
+		</section>
 	</main>
 
 
