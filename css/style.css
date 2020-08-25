@@ -1,0 +1,531 @@
+@charset "UTF-8";
+/* CSS Document */
+body {
+font-family:'Noto Sans JP', "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", "メイリオ", Meiryo, Osaka, "ＭＳ Ｐゴシック", "MS PGothic", "sans-serif";
+font-size: 16px;
+font-weight: normal;
+text-align: center;
+}
+a {
+-webkit-transition:all .3s;
+transition:all .3s;
+}
+* {
+box-sizing: border-box;
+}
+a:hover {
+-webkit-opacity:0.7;
+opacity:0.7;
+}
+header {
+width: 100%;
+position: relative;
+max-width: 960px;
+margin: 0 auto;
+}
+.logo {
+width: 100%;
+position: relative;
+margin: 0 auto;
+}
+.logo img {
+margin: auto;
+}
+/*--パネル用//--*/
+main {
+	width: 100%;
+	max-width: 960px;
+	margin: 0 auto;
+}
+.text-01 {
+	display: flex;
+	text-align: left;
+}
+.text-01 p {
+	width: 60%;
+	font-size: 18px;
+	line-height: 1.2;
+	padding: 15px;
+	box-sizing: border-box;
+}
+.text-01 p:first-child {
+	width: 40%;
+	
+}
+/*--//パネル用--*/
+.main-title {
+width: 100%;
+height: calc(100% - 48px);
+background: #ffffff;
+}
+.main-title p {
+width: 98%;
+height: 100%;
+margin: auto;
+position: relative;
+}
+.main-title img {
+width: 100%;
+height: 100%;
+margin: auto;
+position: absolute;
+top: 0;
+bottom: 0;
+left: 0;
+right: 0;
+}
+.main-text {
+width: 100%;
+height: 40px;
+background: #ffffff;
+font-size: 2vw;
+color: #000;
+line-height: 40px;
+position: absolute;
+bottom: 0;
+right: 0;
+border-bottom: 2px solid #000;
+border-top: 2px solid #000;
+}
+main {
+  height: 100%;
+  min-height: 100vh;
+}
+.inner {
+width: 100%;
+margin: 0 auto;
+padding: 20px 0;
+}
+.inner img {
+width: 100%;
+border: none;
+}
+.row {
+width: 100%;
+margin: 0 auto 30px;
+padding: 0 15px;
+}
+.row h2 {
+margin: 15px auto;
+font-size: 30px;
+text-decoration:  underline;
+color: #fff100;
+}
+.row > ul {
+display:-webkit-flex;
+display:flex;
+-webkit-box-pack: start;
+justify-content: space-between;
+-webkit-box-align: center;
+align-items: center stretch;
+flex-wrap: wrap;
+-webkit-box-pack: space-between;
+justify-content: space-between;
+}
+.row > ul > li {
+display:-webkit-flex;
+display:flex;
+margin-bottom: 20px;
+position: relative;
+}
+.row > ul > li > div {
+background: #d40202;
+}
+.item ul > li img {
+border: 1px solid #f3f3f3;
+}
+.item ul > li > div {
+width: 100%;
+border: 3px solid #d40202;
+}
+.item ul > li > div > img {
+display: block;
+border: none;
+}
+.item ul > li > div > a {
+display: block;
+width: 100%;
+height:-webkit-calc(100% - 38px);
+height:calc(100% - 38px);
+position: absolute;
+top: 0;
+left: 0;
+}
+.item ul > li > div > div.text {
+padding: 10px;
+text-align: left;
+}
+.item ul > li.col-4 > div > div.text,
+.item ul > li.col-5 > div > div.text,
+.item ul > li.col-6 > div > div.text {
+padding: 10px 10px 0 10px;	
+}
+.item ul > li > div > div.text > p.catch {
+font-size: 0.8rem;
+color: #ffffff;
+max-width: 260px;
+margin-bottom: 10px;
+overflow: hidden;
+white-space: nowrap;
+text-overflow: ellipsis;
+}
+.item ul > li > div > div.text > p.offText {
+float: left;
+width: 60px;
+height: 60px;
+margin-right: 20px;
+padding: 10px;
+text-align: center;
+box-sizing: border-box;
+font-family: 'Oswald', "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", "メイリオ", Meiryo, Osaka, "ＭＳ Ｐゴシック", "MS PGothic", "sans-serif";
+font-size: 20px;
+font-weight: bold;
+line-height: 1em;
+color: #d40202;
+background-image: url(../img/offbg.png);
+background-size: 60px;
+background-repeat: no-repeat;
+}
+.item ul > li > div > div.text > p.norPrice {
+font-family: 'Oswald', "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", "メイリオ", Meiryo, Osaka, "ＭＳ Ｐゴシック", "MS PGothic", "sans-serif";
+font-size: 0.8rem;
+color: #ffffff;
+}
+.item ul > li > div > div.text > p.norPrice::before {
+content: "通常価格";
+font-size: 0.7rem;
+}
+.item ul > li > div > div.text > p.norPrice::after {
+content: "円";
+font-size: 0.7rem;
+}
+.item ul > li > div > div.text > p.salePrice {
+font-family: 'Oswald', "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", "メイリオ", Meiryo, Osaka, "ＭＳ Ｐゴシック", "MS PGothic", "sans-serif";
+font-size: 2.0rem;
+font-weight: bold;
+line-height: 1.1em;
+text-align: right;
+color: #ffffff;
+}
+.item ul > li > div > div.text > p.salePrice::before {
+content: "クーポン利用で";
+font-size: 1.2rem;
+}
+.item ul > li > div > div.text > p.salePrice::after {
+content: "円";
+font-size: 1.5rem;
+}
+
+.item ul > li.col-4 > div > div.text > p.offText,
+.item ul > li.col-5 > div > div.text > p.offText,
+.item ul > li.col-6 > div > div.text > p.offText {
+width: 30px;
+height: 30px;
+padding: 5px;
+font-size: 10px;
+background-size: 30px;
+}
+.item ul > li.col-4 > div > div.text > p.offText,
+.item ul > li.col-5 > div > div.text > p.offText,
+.item ul > li.col-6 > div > div.text > p.offText {
+float: none;
+margin: 0 auto;
+}
+.item ul > li.col-4 > div > div.text > p.norPrice,
+.item ul > li.col-5 > div > div.text > p.norPrice,
+.item ul > li.col-6 > div > div.text > p.norPrice {
+text-align: center;
+}
+.item ul > li.col-4 > div > div.text > p.norPrice::before,
+.item ul > li.col-4 > div > div.text > p.norPrice::after,
+.item ul > li.col-5 > div > div.text > p.norPrice::before,
+.item ul > li.col-5 > div > div.text > p.norPrice::after,
+.item ul > li.col-6 > div > div.text > p.norPrice::before,
+.item ul > li.col-6 > div > div.text > p.norPrice::after {
+font-size: 0.7rem;
+}
+.item ul > li.col-4 > div > div.text > p.salePrice,
+.item ul > li.col-5 > div > div.text > p.salePrice,
+.item ul > li.col-6 > div > div.text > p.salePrice {
+font-size: 1.0rem;
+text-align: center;
+}
+.item ul > li.col-4 > div > div.text > p.salePrice::before,
+.item ul > li.col-4 > div > div.text > p.salePrice::after,
+.item ul > li.col-5 > div > div.text > p.salePrice::before,
+.item ul > li.col-5 > div > div.text > p.salePrice::after,
+.item ul > li.col-6 > div > div.text > p.salePrice::before,
+.item ul > li.col-6 > div > div.text > p.salePrice::after {
+font-size: 0.8rem;
+}
+
+.item ul > li > div.sale {
+
+}
+
+.item ul > li > div > div.icons1 {
+width: 100%;
+padding: 5px 0;
+box-sizing: border-box;
+text-align: center;
+}
+/*pu1 p10 deal1 pb10 shipping1 cpn1 asu1 new1*/
+
+.item ul > li > div > div.icons1  > ul > li {
+display: inline-block;
+height: 14px;
+margin: 0px 2px;
+padding: 0 3px;
+font-size: 10px;
+color: #d40202;
+text-align: center;
+line-height: 14px;
+background: #ffffff;
+border-radius: 2px;
+-webkit-border-radius: 2px;
+}
+.item ul > li > div > div.icons1 > ul > li.pu,
+.item ul > li > div > div.icons1 > ul > li.p,
+.item ul > li > div > div.icons1 > ul > li.deal,
+.item ul > li > div > div.icons1 > ul > li.pb,
+.item ul > li > div > div.icons1 > ul > li.shipping,
+.item ul > li > div > div.icons1 > ul > li.cpn,
+.item ul > li > div > div.icons1 > ul > li.asu,
+.item ul > li > div > div.icons1 > ul > li.new {
+display: none;
+}
+.item ul > li > div > div.icons1 > ul > li:nth-child(n + 6) {
+display: none;
+}
+
+.item ul > li > div > div.icons {
+display: none;
+}
+
+.item ul > li > div > div.book1 {
+width: 100%;
+height: 38px;
+padding: 5px 0;
+box-sizing: border-box;
+text-align: center;
+}
+.item ul > li > div > div.book1 > a {
+display: block;
+width: 90%;
+height: 28px;
+margin: 0 auto;
+font-size: 0.8rem;
+font-weight: bold;
+color: #d40202;
+line-height: 28px;
+background: #F8D004;
+border-radius: 3px;
+-webkit-border-radius: 3px;
+}
+.item ul > li > div > div.book {
+display: none;
+}
+.item ul > li > div.nor > div.text > p.norPrice,
+.item ul > li > div.nor > div.text > p.offText,
+.item ul > li > div.nor > div.text > p.salePrice::before {
+display: none;
+}
+.item ul > li > div.nor > div.text > p.salePrice,
+.item ul > li > div.nor > div.text > p.shipping,
+.item ul > li > div.list > div.book1 {
+text-align: center;
+}
+.item ul > li > div.list > div.text,
+.item ul > li > div.list > div.icons,
+.item ul > li > div.list > div.icons1,
+.item ul > li > div.list > div.book,
+.item ul > li > div.list > div.book1 {
+display: none;
+}
+
+.row > ul > li.col-4,
+.row > ul > li.col-5,
+.row > ul > li.col-6 {
+width:-webkit-calc(100% / 2 - 5px);
+width:calc(100% / 2 - 5px);
+}
+
+footer {
+width: 100%;
+background: #1ecce0;
+color: #ffffff;
+}
+footer ul {
+margin: 15px auto;
+}
+footer li {
+width: 90%;
+margin: 10px auto;
+}
+footer a {
+display: block;
+width: 100%;
+height: 30px;
+background: #ffffff;
+-webkit-border-radius: 5px;
+border-radius: 5px;
+line-height: 30px;
+color: rgba(230,0,18,1.00);
+text-decoration: none;
+}
+footer .copyright {
+font-family: 'Oswald', "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", "メイリオ", Meiryo, Osaka, "ＭＳ Ｐゴシック", "MS PGothic", "sans-serif";
+font-size: 1rem;
+color: #ffffff;
+
+}
+@media screen and (max-width:768px){
+.main-text {
+width: calc(100% - 0px);
+padding-right: 0px;
+height: 40px;
+background: #000000;
+font-size: 15px;
+color: #ffffff;
+line-height: 40px;
+position: absolute;
+bottom: 0;
+right: 0;
+}
+}
+@media screen and (min-width:768px){
+.row > ul > li.col-1 {
+width:-webkit-calc(100% / 1);
+width:calc(100% / 1);
+}
+.row > ul > li.col-2 {
+width:-webkit-calc(100% / 2 - 5px);
+width:calc(100% / 2 - 5px);
+}
+.row > ul > li.col-3,
+.row > ul > li.col-4,
+.row > ul > li.col-5,
+.row > ul > li.col-6 {
+width:-webkit-calc(100% / 3 - 5px);
+width:calc(100% / 3 - 5px);
+}
+
+footer ul {
+max-width: 976px;
+margin: 15px auto;
+display:-webkit-flex;
+display:flex;
+-webkit-box-pack: start;
+justify-content: space-between;
+-webkit-box-align: center;
+align-items: center;
+flex-wrap: wrap;
+-webkit-box-pack: center;
+justify-content: center;
+}
+footer li {
+width:-webkit-calc(100% / 3);
+width:calc(100% / 3);
+padding: 0 10px;
+}
+}
+
+@media screen and (min-width:990px){
+header {
+}
+.main-title p {
+width: 814px;
+margin: auto;
+position: relative;
+}
+.main-title img {
+width: 100%;
+margin: auto;
+position: absolute;
+top: 0;
+bottom: 0;
+left: 0;
+right: 0;
+}
+.row {
+max-width: 976px;
+padding: 70px 0 0;
+}
+.row > ul > li {
+margin-bottom: 20px;
+}
+.row > ul > li.col-1 {
+width:-webkit-calc(100% / 1);
+width:calc(100% / 1);
+}
+.row > ul > li.col-2 {
+width:-webkit-calc(100% / 2 - 5px);
+width:calc(100% / 2 - 5px);
+}
+.row > ul > li.col-3 {
+width:-webkit-calc(100% / 3 - 5px);
+width:calc(100% / 3 - 5px);
+}
+.row > ul > li.col-4 {
+width:-webkit-calc(100% / 4 - 5px);
+width:calc(100% / 4 - 5px);
+}
+.row > ul > li.col-5 {
+width:-webkit-calc(100% / 5 - 5px);
+width:calc(100% / 5 - 5px);
+}
+.row > ul > li.col-6 {
+width:-webkit-calc(100% / 6 - 5px);
+width:calc(100% / 6 - 5px);
+}
+.item ul > li.col-4 > div > div.text > p.offText,
+.item ul > li.col-5 > div > div.text > p.offText {
+float: left;
+}
+.item ul > li > div > div.text > p.salePrice {
+font-size: 2.0rem;
+line-height: 1.1em;
+}
+.item ul > li > div > div.text > p.salePrice::before {
+font-size: 1.5rem;
+}
+.item ul > li > div > div.text > p.salePrice::after {
+font-size: 1.5rem;
+}
+.item ul > li.col-4 > div > div.text > p.offText,
+.item ul > li.col-5 > div > div.text > p.offText {
+margin-right: 10px;
+}
+.item ul > li.col-4 > div.sale > div.text > p.norPrice,
+.item ul > li.col-5 > div.sale > div.text > p.norPrice {
+text-align: left;
+}
+.item ul > li.col-4 > div.sale > div.text > p.salePrice,
+.item ul > li.col-5 > div.sale > div.text > p.salePrice {
+text-align: right;
+}
+.item ul > li.col-2 > div > div.icons1  > ul > li {
+height: 22px;
+margin: 3px;
+padding: 0 4px;
+font-size: 18px;
+line-height: 22px;
+}
+.item ul > li.col-3 > div > div.icons1  > ul > li{
+height: 18px;
+margin: 2px;
+padding: 0 4px;
+font-size: 14px;
+line-height: 18px;
+}
+.item ul > li.col-2 > div > div.text > p.catch {
+max-width: 90%;	
+}
+}
+
+.timesale {
+height: 40px;
+line-height: 40px;
+font-size: 20px;
+color: #ffffff;
+}

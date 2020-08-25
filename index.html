@@ -1,0 +1,116 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>イベントページ</title>
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="cache-control" content="no-cache">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="説明文" />
+<meta name="keywords" content="キーワード" />
+<link rel="stylesheet" href="css/reset.css">
+<link rel="stylesheet" href="css/font.css">
+<link rel="stylesheet" href="css/style.css">
+<script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+<script type="text/javascript">
+        	function CountPanel() {
+            // var panel_size=11.8; // ベースのパネルサイズです。正方形で縦横は同一としています。
+            var panel_size=20; // ベースのパネルサイズです。正方形で縦横は同一としています。
+            var vartical = document.getElementById('vertical');
+            var horizontal = document.getElementById('horizontal');
+
+            if(vartical.value.match(/[0-9]/g) && horizontal.value.match(/[0-9]/g)) { //数値以外の文字列が含まれている場合、スルー
+                if(panel_size <= vartical.value && panel_size <= horizontal.value){ //縦、横いずれかがベースパネルサイズより小さい場合は、1枚も置けないとみなす
+                    // panel_size で値を除算
+                    var panel_var = Math.floor(vartical.value / panel_size);
+                    var panel_hor = Math.floor(horizontal.value/ panel_size);
+                    // 縦×横
+                    var panel_count = panel_var*panel_hor;
+                    document.getElementById('panelcount').innerHTML = panel_count;
+                }else{
+                    // ベースより低い数値の場合は、0とする
+                    document.getElementById('panelcount').innerHTML = 0;
+                }
+            }
+        }
+	</script>
+
+<script src="https://cdn.jsdelivr.net/npm/lodash@4.17.20/lodash.min.js"></script>
+<script src="js/sheetChecker.js" defer></script>
+
+<!--[if lt IE 9]>
+<script src="//cdn.jsdelivr.net/html5shiv/3.7.2/html5shiv.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+<style>
+	.a-Btn {
+		padding: 20px;
+		cursor: pointer;
+	}
+	.a-Btn.forBack {
+		background: greenyellow;
+
+	}
+	.a-Btn.forCalc {
+		background: skyblue;
+	}
+	.u-Btn-Wrapper >* {
+		display: inline-block;
+		margin: auto;
+	}
+</style>
+</head>
+
+<body class="wrapper">
+	<header>
+		<h1 class="logo">
+			<picture>
+				<source media="(min-width: 960px)" type="image/jpeg" srcset="img/title_pc.jpg">
+  				<img src="img/title_sp.jpg" width="100%" alt="いろいろフィット枚数チェッカー">
+			</picture>  
+		</h1>
+	</header>
+
+	<main>
+		<div class="text-01">
+			<p>組み合わせて<br>フィットして。</p>
+			<p>お好きな場所の必要な枚数が簡単にわかる計算機です。購入前のご検討や購入後の設置時にお役立て下さい。</p>
+		</div>
+		<img src="img/panel_img.jpg" width="100%" alt="パネル">
+		<div class="text-02">
+			<p>測った長さを入力。</p>
+		</div>
+		<form id="calc_for_sheets_Checker">
+			<div class="form-area">
+				<div class="input-area">
+					<p>
+						<label>❶</label>
+						<input type="number" id="vertical" size="10" maxlength="8" value="0.0" onchange="CountPanel();">cm
+					</p>
+					<p>
+						<label>❷</label>
+						<input type="text" id="horizontal" size="10" maxlength="8" value="0.0" onchange="CountPanel();">cm
+					</p>
+				</div>
+				<div class="btn-area">
+					<p>
+						<input type="submit" value="必要枚数を計算する">
+					</p>
+				</div>
+				<div class="output-area">
+					<p>
+					<label>置ける枚数：</label>
+					<span id="panelcount"></span>
+					</p>
+				</div>
+			</div>
+			<div class="u-Btn-Wrapper" style="margin-top: 30px;">
+				<div id="js-Btn--forBack" class="a-Btn forBack">戻る</div>
+				<div id="js-Btn--forCalc" class="a-Btn forCalc">計算する</div>
+			</div>
+		</form>
+	</main>
+
+
+</body>
+</html>
