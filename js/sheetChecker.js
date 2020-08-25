@@ -1,10 +1,14 @@
 let calc_for_sheets_Checker = (function(formId){
 
-    //計算結果を格納するオブジェクト
-    let result_obj = {}
     
+    let result_obj = {},//計算結果を格納するオブジェクト
+        form_data = {},//バリデーションを通ったフォーム値
+        remainder_result = {//表示結果の切り替えで使う
+            "b": false,
+            "c": false,
+        };
+
     //環境変数
-    let error;
     let DENOMINATOR = function () {
         return 25;
     }
@@ -14,6 +18,7 @@ let calc_for_sheets_Checker = (function(formId){
 
     //ユーティリティ関数
     let setError,
+        initError,
         ajaxFunc,
         pipeline,
         pipelineWithResrouce,
@@ -22,15 +27,16 @@ let calc_for_sheets_Checker = (function(formId){
         getFormValues;
 
     //内部モジュール関数
-    let sheetsCalc, 
+    let sheets, 
         formComp,
         view;
 
     let evet_btns;
 
 //==================================================================
-    let ERROR1 = "値を入力してください。",
-        ERROR2 = "値を入力してください。";
+    let error = null,
+        error_key,
+        errors;
 
 //==================================================================
 //==================================================================
@@ -53,6 +59,9 @@ let calc_for_sheets_Checker = (function(formId){
 
     setError = function (message) {
         error = message;
+    }
+    initError = function() {
+        error = null;
     }
 
     ajaxFunc = function (ajaxObj) {
@@ -102,7 +111,11 @@ let calc_for_sheets_Checker = (function(formId){
                 }
             }
 
-            let result = _.reduce(funcs, function(data, func){
+            let result = _.reduce(funcs, function(data, func) {
+                if (data === false) {
+                    return false;
+                }
+
                 let resource_data = resource_func(data);
                 return func(resource_data);
             }, {})
@@ -135,17 +148,18 @@ let calc_for_sheets_Checker = (function(formId){
 //==================================================================
     //以下、メインロジック定義
 
-    sheetsCalc = function (target) {
+    sheets = function (target) {
      
         let baseCalc,
-            remainderCalc,
             calcAllSheet;
-        let denominator = DENOMINATOR();
-        let Numerator = NUMERATOR();
+        let denominator = DENOMINATOR(),
+            numerator = NUMERATOR(),
+            feature;
+
         //==================================================================
         //==================================================================
 
-        let command_name = "start";
+        let command_name = "calcStart";
         let excute;
 
         // target = {
@@ -153,65 +167,102 @@ let calc_for_sheets_Checker = (function(formId){
         //     width: values.height,
         // }
         excute = function (target) {
-            console.log(command_name)
-            console.log(target)
-
-            //xとy
-            
+       
              _.map(target, function(value, key){
                 return baseCalc(key, value)
            });
 
-           //bとc: 余りのの処理
-           _.map(target,function(value, key){
-            return remainderCalc(key, value);
-           })
-           
            calcAllSheet();
 
-           console.log(result_obj)
            let keys = Object.keys(result_obj);
            for (let i = 0; i < keys.length; ++i) {
             $("#js-value-" + keys[i]).text(result_obj[keys[i]])
            } 
-            //    return result
-            return
         }
 
         //==================================================================
         //==================================================================
+        feature = function () {
+            let chooseItem = function () {
+
+            }
+            return {
+                choose: choose,
+                items: {
+                    set12: {
+
+                    },
+                    set25: {
+
+                    },
+                    set12: {
+
+                    },
+                    set36: {
+
+                    },
+                    set48: {
+
+                    },
+                    set64: {
+
+                    },
+                }
+            }
+        }
+
         //==================================================================
 
         baseCalc = function (key, value) {
-            let result = (value - denominator)/ Numerator;
+
+            ////////////////////////////////////////////////
+            // %435
+            let remainder = (value - denominator)% numerator;
 
             if (key == "height") {
-                result_obj["x"] = result;
+                result_obj["b"] = remainder;
             
             } else if (key == "width") {
-                result_obj["y"] = result;
+                result_obj["c"] = remainder;
+            }
+
+            ////////////////////////////////////////////////
+            // /435
+            let base = (value - denominator)/ numerator;
+            let remainder_flag = false;
+ 
+            if (remainder <= 10) {
+                remainder_flag = true;
+                base = Math.floor(base);
+            } else {
+                base = Math.ceil(base);
             }
             
-        }
-
-        remainderCalc = function (key, value) {
-            let result = (value - denominator)% Numerator;
-
             if (key == "height") {
-                result_obj["b"] = result;
+                result_obj["x"] = base;
             
             } else if (key == "width") {
-                result_obj["c"] = result;
+                result_obj["y"] = base;
+            }
+
+            ////////////////////////////////////////////////
+            if (key == "height") {
+                remainder_result["b"] = remainder_flag;
+            
+            } else if (key == "width") {
+                remainder_result["c"] = remainder_flag;
             }
         }
+
 
         calcAllSheet = function () {
-            result_obj["a"] = result_obj["x"]*result_obj["y"];
+            result_obj["a"] = result_obj["x"] * result_obj["y"];
         }
 
         //==================================================================
         let return_obj = {};
         return_obj[command_name] = excute;
+        return_obj["feature"] = feature
         return return_obj;
     }
 
@@ -227,15 +278,23 @@ let calc_for_sheets_Checker = (function(formId){
 
         let excute = function (retrieveFormValues) {
             let return_obj = {};
+            let values = retrieveFormValues()
 
-            _.map( retrieveFormValues(), function (value, key) {
+            _.map(values, function (value, key) {
                 let result = validate(value);
                 return_obj[key] = result;
             });
- 
+          
             if (error == null) {
+                $(error_key).text("");
+                form_data = return_obj;
                 return return_obj;
             }
+
+            $(error_key).text(error);
+            initError();
+
+            return false;
         }
 
         //==================================================================
@@ -248,34 +307,34 @@ let calc_for_sheets_Checker = (function(formId){
         }
     
         checkType = function (pattern, target) {
-            let retsult = false;
-    
-            if (RegExp(pattern)) {
-                retsult = true;
+            if (pattern.test(target)) {
+                return true;
             }
-            
-            return retsult;
+            return false;
         }
         
         //type=numberからの受け取り値って、何型？
+        //String target 
         //return undifined or Number
         validate = function (target) {
-
-           return target;
-            // //文字列に変換
+    
+            //半角数字判定
+            if (checkType(/^([1-9]\d*|0)$/, target)) {
+                return parseInt(target, 10);
+            }
             
-            // //半角数字判定
-            // if (checkType("/[1-9]/", target)) {
-            //     return parseInt(target, 10)
-                
-            // }
-            // //全角数字判定
-            // if (checkType("/[１-9]/", target)) {
-            //     target = toHalfWidth(target)
-            //     return parseInt(target, 10);
-            // }
+            //全角数字判定
+            if (checkType(/^０/, target)) {
+                setError(errors["ERROR1"]);
+                return;
+            }
+            //全角数字判定
+            if (checkType(/^([０-９]*)$/, target)) {
+                target = toHalfWidth(target);
+                return parseInt(target, 10);
+            }
             
-            // setError(ERROR1);
+            setError(errors["ERROR1"]);
         }
 
         //==================================================================
@@ -289,7 +348,8 @@ let calc_for_sheets_Checker = (function(formId){
     view = function () {
 
         let config,
-            handlers;
+            handlers,
+            displayModal;
         //==================================================================
         //==================================================================
         //==================================================================
@@ -320,6 +380,76 @@ let calc_for_sheets_Checker = (function(formId){
             },
         }
 
+        displayModal = function () {
+
+            return function () {
+                //Modal表示
+            }
+        }
+
+        let startLoading = function () {
+
+            return function () {
+                
+            }
+        }
+
+        let stopLoading = function () {
+
+            return function () {
+                
+            }
+        }
+        let displayResult = function () {
+
+            return function () {
+                
+                let result_page = function () {
+                    let b = remainder_result["b"];
+                    let c = remainder_result["c"];
+
+                    if (b === true && c === true) {
+                        return {
+                            title: "設置するときは...",
+                            top: "適宜サイドパーツをカットして調節できます。",
+                        };
+                    } else if (b === false && c === false) {
+                        return {
+                            title: "カットするときは...",
+                            top: `タテの最後のマス：${result_obj["b"]}`,
+                            bottom: `ヨコの最後のマス：${result_obj["c"]}`,
+                        };
+                    } else {
+                        return {
+                            title: "カットするときは...",
+                            top: `タテの最後のマス：${result_obj["b"]}`,
+                            bottom: "ヨコの辺は<br>サイドパーツをカットして調節できます。",
+                        };
+                    }
+                }();
+
+                //枚数表示
+                let number_of_sheets = result_obj["a"];
+                $("#js-Num-Sheets").text(number_of_sheets);
+
+                //面積表示
+                let area = (form_data["height"] * form_data["width"]) / 1000000;
+                $("#js-Sheet-Area").text(area);
+
+                //おすすめ関連
+                let feature = sheets().feature();
+
+                //おすすめのセット
+                let featured_set = feature.choose(number_of_sheets);
+
+                //おすすめ商品リンク　周囲のサムネイル、文字もリンクにする。
+                
+                //最後のマス
+                $("#js-Advice-Title").text(result_page["title"]);
+                $("#js-Advice-Top").text(result_page["top"]);
+                $("#js-Advice-Bottom").text(result_page["bottom"]);
+            }
+        }
         //==================================================================
         //==================================================================
         //==================================================================
@@ -335,16 +465,16 @@ let calc_for_sheets_Checker = (function(formId){
                 let result = pipelineWithResrouce(btn_obj.resource, btn_obj.methods)();
             },
     
-            loadingAnime: function () {
+            // loadingAnime: function () {
                 
-                let start,
-                    stop;
+            //     let start,
+            //         stop;
     
-                return {
-                    start: start,
-                    stop: stop,
-                }
-            },
+            //     return {
+            //         start: start,
+            //         stop: stop,
+            //     }
+            // },
         }
 
         //==================================================================
@@ -363,7 +493,11 @@ let calc_for_sheets_Checker = (function(formId){
 
 //==================================================================
     //以下、メインロジック起動
-
+    error_key = "#js-Error"
+    errors = {
+        ERROR1: "⚠数字を入力してください。",
+    }
+    
     let formValue = function () {
         let height = $("#vertical").val();
         let width = $("#horizontal").val();
@@ -420,7 +554,7 @@ let calc_for_sheets_Checker = (function(formId){
             colors: btn_colors2,
             event: "click",
             handler: "calcNumbersOfSheets",
-            methods: [getFormValues(formValue), sheetsCalc().start]
+            methods: [getFormValues(formValue), sheets().calcStart, function(){console.log(remainder_result)}]
         }
     ]
 

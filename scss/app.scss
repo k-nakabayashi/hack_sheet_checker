@@ -1,0 +1,70 @@
+.l-Checker {
+    //////////////////////////////////////////////////////
+    //utility
+    .u-Container {
+        max-width: 1024px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .u-Btn-Wrapper {
+        > * {
+            display: inline-block;
+            margin: auto;
+        }
+    } 
+
+    //////////////////////////////////////////////////////
+    //module
+    .m-Result-Area {
+        margin-top: 60px;
+        margin-bottom: 60px;
+        background: gray;
+        padding-left: 10%;
+        padding-right: 10%;
+        color: #fff;
+
+        > * {
+            padding-top: 40px;
+        }
+        
+        > .c-Result {
+            padding-bottom: 40px;
+        }
+    }
+    //////////////////////////////////////////////////////
+    //Atomic
+    .a-Btn {
+        padding: 20px;
+        cursor: pointer;
+    }
+    .a-Btn {
+        &.forBack {
+            background: greenyellow;
+        }
+        &.forCalc {
+            background: skyblue;
+        }
+    }
+
+    //////////////////////////////////////////////////////
+    //component
+    .c-Result {
+
+        > * {
+            margin-top: 20px;
+            text-align: left;
+        }
+        span {
+            font-size: 16px;
+            font-weight: normal;
+            padding-left: 20px;
+        }
+    }
+
+    #js-Error {
+        &.a-Text {
+            height: 30px;
+            line-height: 30px;
+        }
+    }
+}

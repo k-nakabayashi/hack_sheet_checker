@@ -13,28 +13,28 @@
 <link rel="stylesheet" href="css/style.css">
 <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <script type="text/javascript">
-        	function CountPanel() {
-            // var panel_size=11.8; // ベースのパネルサイズです。正方形で縦横は同一としています。
-            var panel_size=20; // ベースのパネルサイズです。正方形で縦横は同一としています。
-            var vartical = document.getElementById('vertical');
-            var horizontal = document.getElementById('horizontal');
+	function CountPanel() {
+		// var panel_size=11.8; // ベースのパネルサイズです。正方形で縦横は同一としています。
+		var panel_size=20; // ベースのパネルサイズです。正方形で縦横は同一としています。
+		var vartical = document.getElementById('vertical');
+		var horizontal = document.getElementById('horizontal');
 
-            if(vartical.value.match(/[0-9]/g) && horizontal.value.match(/[0-9]/g)) { //数値以外の文字列が含まれている場合、スルー
-                if(panel_size <= vartical.value && panel_size <= horizontal.value){ //縦、横いずれかがベースパネルサイズより小さい場合は、1枚も置けないとみなす
-                    // panel_size で値を除算
-                    var panel_var = Math.floor(vartical.value / panel_size);
-                    var panel_hor = Math.floor(horizontal.value/ panel_size);
-                    // 縦×横
-                    var panel_count = panel_var*panel_hor;
-                    document.getElementById('panelcount').innerHTML = panel_count;
-                }else{
-                    // ベースより低い数値の場合は、0とする
-                    document.getElementById('panelcount').innerHTML = 0;
-                }
-            }
-        }
-	</script>
-
+		if(vartical.value.match(/[0-9]/g) && horizontal.value.match(/[0-9]/g)) { //数値以外の文字列が含まれている場合、スルー
+			if(panel_size <= vartical.value && panel_size <= horizontal.value){ //縦、横いずれかがベースパネルサイズより小さい場合は、1枚も置けないとみなす
+				// panel_size で値を除算
+				var panel_var = Math.floor(vartical.value / panel_size);
+				var panel_hor = Math.floor(horizontal.value/ panel_size);
+				// 縦×横
+				var panel_count = panel_var*panel_hor;
+				document.getElementById('panelcount').innerHTML = panel_count;
+			}else{
+				// ベースより低い数値の場合は、0とする
+				document.getElementById('panelcount').innerHTML = 0;
+			}
+		}
+	}
+</script>
+<link rel="stylesheet" href="scss/app.css">
 <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.20/lodash.min.js"></script>
 <script src="js/sheetChecker.js" defer></script>
 
@@ -42,59 +42,10 @@
 <script src="//cdn.jsdelivr.net/html5shiv/3.7.2/html5shiv.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/respond.js/1.4.2/respond.min.js"></script>
 <![endif]-->
-<style>
-	.a-Btn {
-		padding: 20px;
-		cursor: pointer;
-	}
-	.a-Btn.forBack {
-		background: greenyellow;
 
-	}
-	.a-Btn.forCalc {
-		background: skyblue;
-	}
-	.u-Btn-Wrapper >* {
-		display: inline-block;
-		margin: auto;
-	}
-	.c-Result > * {
-		margin-top: 20px;
-		text-align: left;
-	}
-	.u-Container {
-		max-width: 1024px;
-		margin-left: auto;
-		margin-right: auto;
-	}
-	.m-Result-Area {
-		margin-top: 60px;
-		margin-bottom: 60px;
-		background: gray;
-		padding-left: 10%;
-		padding-right: 10%;
-
-		color: #fff;
-	}
-	.c-Result span {
-		font-size: 16px;
-		font-weight: normal;
-		padding-left: 20px;
-	}
-	.c-Result > * {
-		font-size: 20px;
-		font-weight: bold;
-	}
-	.m-Result-Area > * {
-		padding-top: 40px;
-	}
-	.m-Result-Area > .c-Result {
-		padding-bottom: 40px;
-	}
-</style>
 </head>
 
-<body class="wrapper">
+<body class="wrapper l-Checker">
 	<header>
 		<h1 class="logo">
 			<picture>
@@ -136,6 +87,8 @@
 					<span id="panelcount"></span>
 					</p>
 				</div>
+
+					<p id="js-Error" class="a-Text"></p>
 			</div>
 			<div class="u-Btn-Wrapper" style="margin-top: 30px;">
 				<div id="js-Btn--forBack" class="a-Btn forBack">戻る</div>
