@@ -48,6 +48,10 @@
   transform: translateX(0);
 }
 
+.l-Checker .m-Modal > * {
+  position: relative;
+}
+
 .l-Checker .m-Modal .a-Btn.forClose {
   position: absolute;
   right: 0;
