@@ -59,20 +59,62 @@
 
 .l-Checker .a-Btn {
   display: inline-block;
-  padding: 20px;
+  padding: 8px;
   cursor: pointer;
-}
-
-.l-Checker .a-Btn.forBack {
-  background: greenyellow;
-}
-
-.l-Checker .a-Btn.forCalc {
-  background: skyblue;
 }
 
 .l-Checker .a-Btn.forClose {
   color: #fff;
+}
+
+.l-Checker .a-Btn.withChange {
+  box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12);
+}
+
+.l-Checker .a-Btn.withChange .ep-Text {
+  padding: 8px;
+  border-radius: 8px;
+}
+
+.l-Checker .a-Btn.withChange .ep-Text .ep-Text_inner {
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.l-Checker .a-Btn.withChange.forBack .ep-Text {
+  background: orange;
+}
+
+.l-Checker .a-Btn.withChange.forBack .ep-Text .ep-Text_inner {
+  transition-property: color, background;
+  transition-duration: 0.5s;
+  background: #fff;
+  color: orange;
+}
+
+.l-Checker .a-Btn.withChange.forBack:active .ep-Text .ep-Text_inner {
+  transition-property: color, background;
+  transition-duration: 0.5s;
+  background: orange;
+  color: #fff !important;
+}
+
+.l-Checker .a-Btn.withChange.forCalc .ep-Text {
+  background: skyblue;
+}
+
+.l-Checker .a-Btn.withChange.forCalc .ep-Text .ep-Text_inner {
+  transition-property: color, background;
+  transition-duration: 0.5s;
+  background: #fff;
+  color: skyblue;
+}
+
+.l-Checker .a-Btn.withChange.forCalc:active .ep-Text .ep-Text_inner {
+  transition-property: color, background;
+  transition-duration: 0.5s;
+  background: skyblue;
+  color: #fff !important;
 }
 
 .l-Checker .c-Result > * {
@@ -84,6 +126,17 @@
   font-size: 16px;
   font-weight: normal;
   padding-left: 20px;
+}
+
+.l-Checker .c-Modal-Content .c-Img-Area .a-Img img {
+  object-fit: contain;
+  max-height: 40vh;
+}
+
+@media screen and (min-width: 769px) {
+  .l-Checker .c-Modal-Content .c-Img-Area .a-Img img {
+    max-height: 40vh;
+  }
 }
 
 @media screen and (min-width: 769px) {

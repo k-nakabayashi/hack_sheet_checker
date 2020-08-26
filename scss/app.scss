@@ -62,27 +62,79 @@
     }
     //////////////////////////////////////////////////////
     //Atomic
+
+
     .a-Btn {
         display: inline-block;
-        padding: 20px;
+        padding: 8px;
         cursor: pointer;
-    }
-    .a-Btn {
-        &.forBack {
-            background: greenyellow;
-        }
-        &.forCalc {
-            background: skyblue;
-        }
+
         &.forClose {
             color: #fff;
+        }
+    }
+    
+    .a-Btn.withChange {
+        box-shadow: 0 2px 4px -1px rgba(0,0,0,.2), 0 4px 5px 0 rgba(0,0,0,.14), 0 1px 10px 0 rgba(0,0,0,.12);
+        
+        .ep-Text {
+            padding: 8px;
+            border-radius: 8px;
+            .ep-Text_inner {
+                padding: 20px;
+                border-radius: 8px;
+            }
+        }
+
+        &.forBack {
+
+            .ep-Text {
+                background: orange;
+                .ep-Text_inner {
+                    transition-property: color, background;
+                    transition-duration: 0.5s;
+                    background: #fff;
+                    color: orange;
+                }
+            }
+            &:active {
+                .ep-Text {
+                    .ep-Text_inner {
+                        transition-property: color, background;
+                        transition-duration: 0.5s;
+                        background: orange;
+                        color: #fff!important;
+                    }
+                }
+            }
+        }
+
+        &.forCalc {
+            .ep-Text {
+                background: skyblue;
+                .ep-Text_inner {
+                    transition-property: color, background;
+                    transition-duration: 0.5s;
+                    background: #fff;
+                    color: skyblue;
+                }
+            }
+            &:active {
+                .ep-Text {
+                    .ep-Text_inner {
+                        transition-property: color, background;
+                        transition-duration: 0.5s;
+                        background: skyblue;
+                        color: #fff!important;
+                    }
+                }
+            }
         }
     }
 
     //////////////////////////////////////////////////////
     //component
     .c-Result {
-
         > * {
             margin-top: 20px;
             text-align: left;
@@ -93,8 +145,20 @@
             padding-left: 20px;
         }
     }
-    .c-Modal-Content {
 
+    .c-Modal-Content {
+        .c-Img-Area {
+            .a-Img {
+                img {
+                    object-fit: contain;
+                    max-height: 40vh;
+                    @media screen and (min-width: 769px) {
+                        max-height: 40vh;
+                    }
+
+                }
+            }
+        }
     }
 
 

@@ -66,21 +66,8 @@
 		</div>
 		<form>
 			<div class="form-area">
-				<div class="input-area">
-					<p>
-						<label>❶</label>
-						<input type="number" id="vertical" size="10" maxlength="8" value="0.0" onchange="CountPanel();">cm
-					</p>
-					<p>
-						<label>❷</label>
-						<input type="text" id="horizontal" size="10" maxlength="8" value="0.0" onchange="CountPanel();">cm
-					</p>
-				</div>
-				<div class="btn-area">
-					<p>
-						<input type="submit" value="必要枚数を計算する">
-					</p>
-				</div>
+
+
 
 				<div id="js-Active-Area">
 					<div class="m-Modal isLeft" id="js-Modal">
@@ -89,31 +76,31 @@
 				
 							<div class="output-area c-Modal-Content">
 								<div class="output-img c-Img-Area">
-									<div class="output-panel01">
-									<img src="img/panel_img-01.jpg" width="100%" alt="パネル">
+									<div class="output-panel01 a-Img">
+										<img src="img/panel_img-01.jpg" width="100%" alt="パネル" id="js-Pannel-Img">
 									</div>
 									<div class="output-text01">
-									<p class="panel01">999<span>枚</span></p>
-									<p class="panel01-min">9999cm&#xB2;</p>
+									<p class="panel01" id="js-Num-Sheets"></p>
+									<p class="panel01-min" id="js-Sheet-Area"></p>
 									</div>
 								</div>
-								<div class="output-text02">
-									<p class="text-ttl01">カットするときは・・・</p>
-									<p class="text-mm01">333<span>mm</span></p>
-									<p class="text-mm01">220<span>mm</span></p>
+								<div class="output-text02" style="color: #fff;">
+									<p class="text-ttl01" id="js-Advice-Title"></p>
+									<p class="text-mm01" id="js-Advice-Top"></p>
+									<p class="text-mm01" id="js-Advice-Bottom"></p>
 								</div>
 								<div class="output-prods">
 									<p class="text-ttl02">おすすめのセット</p>
 									<div class="output-thumb">
 										<p class="prods-thumb">
-											<img class="output-thumb" src="img/thumb12.png">
+											<img class="output-thumb" src="img/thumb12.png" id="js-Thumb">
 										</p>
 										<div class="text-link">
 											<p class="text-name01">
-												<a class="text-name01-link">10mm厚4.5畳用36枚セット<span>￥2,990税込</span></a>
+												<a class="text-name01-link" id="js-Feature-Link--forTop" href="">10mm厚4.5畳用36枚セット<span>￥2,990税込</span></a>
 											</p>
 											<p class="text-name02">
-												<a class="text-name01-link">18mm厚4.5畳用36枚セット<span>￥2,990税込</span></a>
+												<a class="text-name01-link" id="js-Feature-Link--forBottom" href="">18mm厚4.5畳用36枚セット<span>￥2,990税込</span></a>
 											</p>
 										</div>
 									</div>
@@ -122,12 +109,37 @@
 				
 						</div>
 					</div>
-					<div class="u-Btn-Wrapper isRight">
-						<div id="js-Btn--forBack" class="a-Btn forBack">戻る</div>
-						<div id="js-Btn--forCalc" class="a-Btn forCalc">計算する</div>
+					<div class="isRight">
+						<div class="input-area">
+							<p>
+								<label>❶</label>
+								<input type="number" id="vertical" size="10" maxlength="8" value="0.0" onchange="CountPanel();">cm
+							</p>
+							<p>
+								<label>❷</label>
+								<input type="text" id="horizontal" size="10" maxlength="8" value="0.0" onchange="CountPanel();">cm
+							</p>
+						</div>
+					
+						<div class="u-Btn-Wrapper">
+							<div id="js-Btn--forBack" class="a-Btn forBack withChange">
+								<div class="ep-Text">
+									<div class="ep-Text_inner">商品ページに<br>戻る</div>
+								</div>
+							</div>
+							<div id="js-Btn--forCalc" class="a-Btn forCalc withChange">
+								<div class="ep-Text">
+									<div class="ep-Text_inner">必要枚数を<br>計算する</div>
+								</div>
+							</div>
+						</div>
 					</div>
 				</div>
-
+				<!-- <div class="btn-area">
+					<p>
+						<input type="submit" value="必要枚数を計算する">
+					</p>
+				</div> -->
 				<section class="u-Container m-Result-Area">
 					<h2>結果表示</h2>
 					<ul class="c-Result">

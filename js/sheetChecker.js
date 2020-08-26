@@ -11,12 +11,12 @@ let calc_for_sheets_Checker = (function(){
         },
         start_deffered_obj = null,
         time_func = null,
+        open_modal_flag = false,
 
     
     //ユーティリティ関数
         setError,
         initError,
-        ajaxFunc,
         pipeline,
         pipelineWithResrouce,
         setEventHandler,
@@ -30,7 +30,6 @@ let calc_for_sheets_Checker = (function(){
         formComp,
         view,
         asyncProccess,
-
         sheets_utils,
 
     //内部モジュールのオブジェクト
@@ -48,7 +47,8 @@ let calc_for_sheets_Checker = (function(){
         errors,
 
     //その他
-        featureSet;
+        featureSet,
+        modal,
         DENOMINATOR = function () {
             return 25;
         },
@@ -180,22 +180,27 @@ let calc_for_sheets_Checker = (function(){
             startProcess;
 
         aysncP = function (fook_func) {
+            let innerFuncs = _.tail(arguments);
             start_deffered_obj = $.Deferred();
-            process(start_deffered_obj)(fook_func)
+            process(start_deffered_obj)(fook_func, innerFuncs);
+
             return start_deffered_obj.promise();
+
         }
 
-        process = function(d, delay = 0) {
+        process = function(d) {
 
             return function (main_logic) {
-
+                let innerFuncs = _.tail(arguments)[0][0];
                 dalay = main_logic.delay()? main_logic.delay(): delay;
                 console.log("非同期処理：開始")
                 
                 time_func = setTimeout(function(){
                     //計算処理色々
-                    main_logic.execute()
-
+                    main_logic.execute();
+                    _.map(innerFuncs, function(func){
+                        func()
+                    })
                     console.log("非同期処理：完了")
                     d.resolve()
                 }, main_logic.delay())
@@ -206,16 +211,14 @@ let calc_for_sheets_Checker = (function(){
             return false;
         }
 
-        startProcess = function (anime, fook_func, next_func = null) {
+        startProcess = function (anime, fook_func, innet_funcs) {
             let animation = anime();
             animation.start()
 
-            let base_promise_obj = aysncP(fook_func)
-            let next_promice_obj = next_func? aysncP(next_func): null;
+            let base_promise_obj = aysncP(fook_func, innet_funcs)
 
             base_promise_obj
-            .then(null, reject())
-            .then(next_promice_obj, reject())
+            .fail(reject())
             .always(animation.stop);
 
             return base_promise_obj;
@@ -261,6 +264,7 @@ let calc_for_sheets_Checker = (function(){
             process: {
                 calc: {
                     execute: function () {
+                        console.log("process : calc")
                         _.map(form_data, function(value, key){
                             return utils.baseCalc(key, value)
                         });
@@ -415,20 +419,33 @@ let calc_for_sheets_Checker = (function(){
 
         let config,
             handlers,
-            animation;
+            animation,
+            targetDom,
+            initAdviceDom;
+
         //==================================================================
+
+        //==================================================================
+
+        targetDom = (function () {
+            return {
+                advice_title_dom: $("#js-Advice-Title"),
+                advice_top: $("#js-Advice-Top"),
+                advice_bottom: $("#js-Advice-Bottom"),
+                number_of_sheets: $("#js-Num-Sheets"),
+                area: $("#js-Sheet-Area"),
+                link_top: $("#js-Feature-Link--forTop"),
+                link_bottom: $("#js-Feature-Link--forBottom"),
+                thumb: $("#js-Thumb"),
+                pannel: $("#js-Pannel-Img"),
+            }
+        }());
+
         //==================================================================
         //==================================================================
         
         //ボタンの共通ユーティリティ    
         config = {
-            change_colors: function (target, colors) {
-
-                if (!Object.keys(colors).length > 0) {
-                    return
-                }
-            },
-
             toggleFlag: function (target) {
                 return !target.active_flag;
             },
@@ -439,11 +456,6 @@ let calc_for_sheets_Checker = (function(){
                     target.dom.on(btn_obj.event, function() {
                         
                         func(target, btn_obj);
-                        if (btn_obj.colors !=null) {
-                            if (Object.keys(btn_obj.colors).length > 0) {
-                                that.change_colors(target, btn_obj.colors);
-                            }
-                        }
                         target.active_flag = that.toggleFlag(target);
                     })
                 }
@@ -458,7 +470,7 @@ let calc_for_sheets_Checker = (function(){
                 let dom = $("#js-Modal");
 
                 return function (data = null) {
-
+                    
                     header_dom.toggleClass("isActive");
                     wrapper_dom.toggleClass("isActive")
 
@@ -466,7 +478,7 @@ let calc_for_sheets_Checker = (function(){
                         "top": `${header_dom.height() - 1}px`,
                     });
                     dom.toggleClass("isActive");
-
+                    open_modal_flag = open_modal_flag? false: true;
                     return data;
                 }
 
@@ -487,58 +499,15 @@ let calc_for_sheets_Checker = (function(){
                 }
             },
 
+
         }
 
-        let displayResult = function () {
-
-            return function () {
-                
-                let result_page = function () {
-                    let b = remainder_result["b"];
-                    let c = remainder_result["c"];
-
-                    if (b === true && c === true) {
-                        return {
-                            title: "設置するときは...",
-                            top: "適宜サイドパーツをカットして調節できます。",
-                        };
-                    } else if (b === false && c === false) {
-                        return {
-                            title: "カットするときは...",
-                            top: `タテの最後のマス：${result_obj["b"]}`,
-                            bottom: `ヨコの最後のマス：${result_obj["c"]}`,
-                        };
-                    } else {
-                        return {
-                            title: "カットするときは...",
-                            top: `タテの最後のマス：${result_obj["b"]}`,
-                            bottom: "ヨコの辺は<br>サイドパーツをカットして調節できます。",
-                        };
-                    }
-                }();
-
-                //枚数表示
-                let number_of_sheets = result_obj["a"];
-                $("#js-Num-Sheets").text(number_of_sheets);
-
-                //面積表示
-                let area = (form_data["height"] * form_data["width"]) / 1000000;
-                $("#js-Sheet-Area").text(area);
-
-                //おすすめ関連
-                let feature = featureSet();
-
-                //おすすめのセット
-                let featured_set = feature.choose(number_of_sheets);
-
-                //おすすめ商品リンク　周囲のサムネイル、文字もリンクにする。
-                
-                //最後のマス
-                $("#js-Advice-Title").text(result_page["title"]);
-                $("#js-Advice-Top").text(result_page["top"]);
-                $("#js-Advice-Bottom").text(result_page["bottom"]);
-            }
+        initAdviceDom = function () {
+            _.map(targetDom, function(dom){
+                dom.html("");
+            })
         }
+
         //==================================================================
         //==================================================================
         //==================================================================
@@ -546,15 +515,27 @@ let calc_for_sheets_Checker = (function(){
         //クリックイベントのハンドラー
         handlers = {
             backToPage: function (target) {
-                window.history.back()
+                window.history.back();
             },
     
             calcNumbersOfSheets: function (target, btn_obj) {
+                if (target.dom.hasClass("isActive")) {
+                    return;
+                }
+                target.dom.addClass("isActive").on('transitionend webkitTransitionEnd',function(){
+                    setTimeout(function(){
+                        target.dom.removeClass("isActive");
+                    }, 500);
+                })
+                
+                console.log("open_modal_flag : " + open_modal_flag)
+
                 let result = pipelineWithResrouce(btn_obj.resource, btn_obj.methods)();
             },
 
             closeModal: function (target, btn_obj) {
                 pipeline.apply(null, btn_obj.methods)();
+                initAdviceDom();
             }
 
         }
@@ -564,6 +545,7 @@ let calc_for_sheets_Checker = (function(){
             config: config,
             handlers: handlers,
             animation: animation,
+            targetDom: targetDom,
         }
     }
 
@@ -581,33 +563,101 @@ let calc_for_sheets_Checker = (function(){
 //==================================================================
     //以下、メインロジック起動
 
-    featureSet = function () {
-        let chooseItem = function () {
+    featureSet = function (number_of_sheets) {
 
-        }
-        return {
-            choose: choose,
-            items: {
-                set12: {
-
+        let top_text = "10mm厚4.5畳用";
+        let bottom_text = "18mm厚4.5畳用";
+        let items = {
+            set12: {
+                thumb: "img/thumb12.png",
+                top: {
+                    text: `${top_text}<br>12枚セット`,
+                    cost: "2,990",
+                    href: "/12_top",
                 },
-                set25: {
-
+                bottom: {
+                    text: `${bottom_text}<br>12枚セット`,
+                    cost: "3,990",
+                    href: "/12_bottom",
                 },
-                set12: {
-
+            },
+            set25: {
+                thumb: "img/thumb25.png",
+                top: {
+                    text: `${top_text}<br>25枚セット`,
+                    cost: "2,990",
+                    href: "/25_top",
                 },
-                set36: {
-
+                bottom: {
+                    text: `${bottom_text}<br>25枚セット`,
+                    cost: "3,990",
+                    href: "/25_bottom",
                 },
-                set48: {
+            },
 
+            set36: {
+                thumb: "img/thumb36.png",
+                top: {
+                    text: `${top_text}<br>36枚セット`,
+                    cost: "2,990",
+                    href: "/36_top",
                 },
-                set64: {
+                thumb: "img/thumb12.png",
+                bottom: {
+                    text: `${bottom_text}<br>36枚セット`,
+                    cost: "3,990",
+                    href: "/36_bottom",
+                },
+            },
 
+            set48: {
+                thumb: "img/thumb48.png",
+                top: {
+                    text: `${top_text}<br>48枚セット`,
+                    cost: "2,990",
+                    href: "/48_top",
                 },
+                bottom: {
+                    text: `${bottom_text}<br>48枚セット`,
+                    cost: "3,990",
+                    href: "/48_bottom",
+                },
+            },
+
+            set64: {
+                thumb: "img/thumb64.png",
+                top: {
+                    text: `${top_text}<br>64枚セット`,
+                    cost: "2,990",
+                    href: "/64_top",
+                },
+                bottom: {
+                    text: `${bottom_text}<br>64枚セット`,
+                    cost: "3,990",
+                    href: "/64_bottom",
+                },
+            },
+        };
+
+        return (function () {
+
+            if (number_of_sheets <= 12) {
+                return items.set12;
+
+            } else if (number_of_sheets <= 25) {
+                return items.set25;
+
+            } else if (number_of_sheets <= 36) {
+                return items.set36;
+            
+            } else if (number_of_sheets <= 48) {
+                return items.set48;
             }
-        }
+
+            return items.set64;
+            
+        }());
+        
     }
 
     error_key = "#js-Error"
@@ -625,31 +675,89 @@ let calc_for_sheets_Checker = (function(){
         }
     }
 
-    //1. 各種ボタンのイベント設定
-    let btn_colors1 = {
-        true: {
-            color1: "",
-            color2: "",
-        },
+    let processResultDisplay = function (target_dom) {
 
-        false: {
-            color1: "",
-            color2: "",
-        },
+        return function () {
+                console.log("process: reuslt display");
+
+                let result_page,
+                    number_of_sheets,
+                    area,
+                    feature;
+
+                result_page = function () {
+                    let b = remainder_result["b"];
+                    let c = remainder_result["c"];
+
+                    if (b === true && c === true) {
+                        return {
+                            img: "img/panel_img-01.jpg",
+                            title: "設置するときは...",
+                            top: "適宜サイドパーツをカットして<br>調節できます。",
+                        };
+                    } else if (b === false && c === false) {
+                        return {
+                            img: "img/panel_img-02.jpg",
+                            title: "カットするときは...",
+                            top: `タテの最後のマス：<span>${result_obj["b"]}mm</span>`,
+                            bottom: `ヨコの最後のマス：<span>${result_obj["c"]}mm</span>`,
+                        };
+                    } else {
+                        return {
+                            img: "img/panel_img-02.jpg",
+                            title: "カットするときは...",
+                            top: `タテの最後のマス：<span>${result_obj["b"]}mm</span>`,
+                            bottom: "ヨコの辺は<br>サイドパーツをカットして調節できます。",
+                        };
+                    }
+                }();
+
+                (function(){
+
+                    target_dom.pannel.attr("src", result_page["img"])
+                    //枚数表示
+                    number_of_sheets = result_obj["a"];
+                    target_dom.number_of_sheets.html(`${number_of_sheets}<span>枚</span>`);
+
+                    //面積表示
+                    area = (form_data["height"] * form_data["width"]) / 1000000;
+                    target_dom.area.html(`${area}cm&#xB2;`);
+                }());
+
+                //おすすめのセット
+                //おすすめ商品リンク　周囲のサムネイル、文字もリンクにする
+                (function() {
+                    feature = featureSet(number_of_sheets);
+                    let top = feature.top;
+                    let bottom = feature.bottom;
+
+                    target_dom.link_top.html(
+                        `${top.text}<span>￥${top.cost}税込</span>`
+                    )
+                    target_dom.link_top.attr("href", top.text.href);
+                    
+                    target_dom.link_bottom.html(
+                        `${bottom.text}<span>￥${bottom.cost}税込</span>`
+                    )
+                    target_dom.link_bottom.attr("href", feature.bottom.text.href);
+
+          
+                    target_dom.thumb.attr("src", feature.thumb)
+
+                }());
+
+                
+                //最後のマス
+                (function(){
+                    target_dom.advice_title_dom.html(result_page["title"]);
+                    target_dom.advice_top.html(result_page["top"]);
+                    target_dom.advice_bottom.html(result_page["bottom"]);
+                }())
+
+            };
     }
 
-    let btn_colors2 = {
-        true: {
-            color1: "",
-            color2: "",
-        },
-
-        false: {
-            color1: "",
-            color2: "",
-        },
-    }
-
+    //各種ボタンのイベント設定
     let resource = function(data) {
         return {
             height: data.height,
@@ -657,28 +765,37 @@ let calc_for_sheets_Checker = (function(){
         }
     }
 
-    let modal = view_obj.animation.toggleModal();
+    modal = view_obj.animation.toggleModal();
 
+    let modalWrapper = function () {
+        if (open_modal_flag == true) {
+            return;
+        }
+        return modal();
+    }
+    
     let innerProcess = function (func1) {
-        asyncProccess_obj.start(view_obj.animation.loading(), func1, null)
+        let inner_funcs = [
+            processResultDisplay(view_obj.targetDom),
+        ];
+
+        asyncProccess_obj.start(view_obj.animation.loading(), func1, inner_funcs)
     }
 
     event_btns = [
 
         {
             dom_key: "#js-Btn--forBack",
-            colors: btn_colors1,
             event: "click",
             handler: "backToPage",
         },
 
         {
             dom_key: "#js-Btn--forCalc",
-            colors: btn_colors2,
             event: "click",
             handler: "calcNumbersOfSheets",
             resource: resource,//methodsで使う共通の引数の型
-            methods: [getFormValues(formValue), modal, sheets(innerProcess).calcStart,]
+            methods: [getFormValues(formValue), modalWrapper, sheets(innerProcess).calcStart]
         },
 
         {
