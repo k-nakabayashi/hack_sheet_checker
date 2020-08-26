@@ -13,45 +13,40 @@
 <link rel="stylesheet" href="css/style.css">
 <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <script type="text/javascript">
-	function CountPanel() {
+		function CountPanel() {
 		// var panel_size=11.8; // ベースのパネルサイズです。正方形で縦横は同一としています。
-		var panel_size=20; // ベースのパネルサイズです。正方形で縦横は同一としています。
-		var vartical = document.getElementById('vertical');
-		var horizontal = document.getElementById('horizontal');
+		// var panel_size=20; // ベースのパネルサイズです。正方形で縦横は同一としています。
+		// var vartical = document.getElementById('vertical');
+		// var horizontal = document.getElementById('horizontal');
 
-		if(vartical.value.match(/[0-9]/g) && horizontal.value.match(/[0-9]/g)) { //数値以外の文字列が含まれている場合、スルー
-			if(panel_size <= vartical.value && panel_size <= horizontal.value){ //縦、横いずれかがベースパネルサイズより小さい場合は、1枚も置けないとみなす
-				// panel_size で値を除算
-				var panel_var = Math.floor(vartical.value / panel_size);
-				var panel_hor = Math.floor(horizontal.value/ panel_size);
-				// 縦×横
-				var panel_count = panel_var*panel_hor;
-				document.getElementById('panelcount').innerHTML = panel_count;
-			}else{
-				// ベースより低い数値の場合は、0とする
-				document.getElementById('panelcount').innerHTML = 0;
-			}
-		}
+		// if(vartical.value.match(/[0-9]/g) && horizontal.value.match(/[0-9]/g)) { //数値以外の文字列が含まれている場合、スルー
+		// 	if(panel_size <= vartical.value && panel_size <= horizontal.value){ //縦、横いずれかがベースパネルサイズより小さい場合は、1枚も置けないとみなす
+		// 		// panel_size で値を除算
+		// 		var panel_var = Math.floor(vartical.value / panel_size);
+		// 		var panel_hor = Math.floor(horizontal.value/ panel_size);
+		// 		// 縦×横
+		// 		var panel_count = panel_var*panel_hor;
+		// 		document.getElementById('panelcount').innerHTML = panel_count;
+		// 	}else{
+		// 		// ベースより低い数値の場合は、0とする
+		// 		document.getElementById('panelcount').innerHTML = 0;
+		// 	}
+		// }
 	}
 </script>
+	
 <link rel="stylesheet" href="scss/app.css">
 <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.20/lodash.min.js"></script>
 <script src="js/sheetChecker.js" defer></script>
-
 <!--[if lt IE 9]>
 <script src="//cdn.jsdelivr.net/html5shiv/3.7.2/html5shiv.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/respond.js/1.4.2/respond.min.js"></script>
 <![endif]-->
-
 </head>
 
 <body class="wrapper l-Checker">
-	<div class="m-Modal" id="js-Modal">
-		<div class="u-Container">
-			<div class="a-Btn forClose" id="js-Close-Modal">閉じる</div>
-		</div>
-	</div>
-	<header>
+
+	<header id="js-Header">
 		<h1 class="logo">
 			<picture>
 				<source media="(min-width: 960px)" type="image/jpeg" srcset="img/title_pc.jpg">
@@ -69,7 +64,7 @@
 		<div class="text-02">
 			<p>測った長さを入力。</p>
 		</div>
-		<form id="calc_for_sheets_Checker">
+		<form>
 			<div class="form-area">
 				<div class="input-area">
 					<p>
@@ -86,30 +81,66 @@
 						<input type="submit" value="必要枚数を計算する">
 					</p>
 				</div>
-				<div class="output-area">
-					<p>
-					<label>置ける枚数：</label>
-					<span id="panelcount"></span>
-					</p>
+
+				<div id="js-Active-Area">
+					<div class="m-Modal isLeft" id="js-Modal">
+						<div class="u-Container">
+							<div class="a-Btn forClose" id="js-Close-Modal">閉じる</div>
+				
+							<div class="output-area c-Modal-Content">
+								<div class="output-img c-Img-Area">
+									<div class="output-panel01">
+									<img src="img/panel_img-01.jpg" width="100%" alt="パネル">
+									</div>
+									<div class="output-text01">
+									<p class="panel01">999<span>枚</span></p>
+									<p class="panel01-min">9999cm&#xB2;</p>
+									</div>
+								</div>
+								<div class="output-text02">
+									<p class="text-ttl01">カットするときは・・・</p>
+									<p class="text-mm01">333<span>mm</span></p>
+									<p class="text-mm01">220<span>mm</span></p>
+								</div>
+								<div class="output-prods">
+									<p class="text-ttl02">おすすめのセット</p>
+									<div class="output-thumb">
+										<p class="prods-thumb">
+											<img class="output-thumb" src="img/thumb12.png">
+										</p>
+										<div class="text-link">
+											<p class="text-name01">
+												<a class="text-name01-link">10mm厚4.5畳用36枚セット<span>￥2,990税込</span></a>
+											</p>
+											<p class="text-name02">
+												<a class="text-name01-link">18mm厚4.5畳用36枚セット<span>￥2,990税込</span></a>
+											</p>
+										</div>
+									</div>
+								</div>
+							</div>
+				
+						</div>
+					</div>
+					<div class="u-Btn-Wrapper isRight">
+						<div id="js-Btn--forBack" class="a-Btn forBack">戻る</div>
+						<div id="js-Btn--forCalc" class="a-Btn forCalc">計算する</div>
+					</div>
 				</div>
 
-					<p id="js-Error" class="a-Text"></p>
-			</div>
-			<div class="u-Btn-Wrapper" style="margin-top: 30px;">
-				<div id="js-Btn--forBack" class="a-Btn forBack">戻る</div>
-				<div id="js-Btn--forCalc" class="a-Btn forCalc">計算する</div>
+				<section class="u-Container m-Result-Area">
+					<h2>結果表示</h2>
+					<ul class="c-Result">
+						<li>x: <span id="js-value-x">0</span></li>
+						<li>y: <span id="js-value-y">0</span></li>
+						<li>a: <span id="js-value-a">0</span></li>
+						<li>b: <span id="js-value-b">0</span></li>
+						<li>c: <span id="js-value-c">0</span></li>
+					</ul>
+				</section>
+
 			</div>
 		</form>
-		<section class="u-Container m-Result-Area">
-			<h2>結果表示</h2>
-			<ul class="c-Result">
-				<li>x: <span id="js-value-x">0</span></li>
-				<li>y: <span id="js-value-y">0</span></li>
-				<li>a: <span id="js-value-a">0</span></li>
-				<li>b: <span id="js-value-b">0</span></li>
-				<li>c: <span id="js-value-c">0</span></li>
-			</ul>
-		</section>
 	</main>
 
 

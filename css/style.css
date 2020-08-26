@@ -49,8 +49,44 @@ main {
 	box-sizing: border-box;
 }
 .text-01 p:first-child {
-	width: 40%;
-	
+	width: 40%;	
+}
+
+.output-area {
+	width: 100%;
+	padding: 10%;
+	box-sizing: border-box;
+}
+.output-img {
+	width: 100%;
+	position: relative;
+	overflow: hidden;
+}
+.output-text01 {
+	position: absolute;
+	margin: auto;
+	top: 45%;
+	left: 0;
+	right: 0;
+	bottom: 0;
+}
+.output-prods {
+	width: 100%;
+	padding: 15px;
+	box-sizing: border-box;
+	text-align: left;
+}
+.output-thumb {
+	display: flex;
+}
+.prods-thumb {
+	width: 50%;
+}
+.prods-thumb img {
+	width: 100%;
+}
+.text-link {
+	width: 50%;
 }
 /*--//パネル用--*/
 .main-title {

@@ -1,4 +1,4 @@
-let calc_for_sheets_Checker = (function(formId){
+let calc_for_sheets_Checker = (function(){
 
     
     //かなり重要な共通オブジェクト：そこらかしこで利用する。
@@ -453,9 +453,20 @@ let calc_for_sheets_Checker = (function(formId){
         animation = {
           
             toggleModal: function () {
-                let dom = $("#js-Modal")
+                let header_dom = $("#js-Header");
+                let wrapper_dom = $("#js-Active-Area")
+                let dom = $("#js-Modal");
+
                 return function (data = null) {
+
+                    header_dom.toggleClass("isActive");
+                    wrapper_dom.toggleClass("isActive")
+
+                    wrapper_dom.children().css({
+                        "top": `${header_dom.height() - 1}px`,
+                    });
                     dom.toggleClass("isActive");
+
                     return data;
                 }
 
@@ -682,4 +693,4 @@ let calc_for_sheets_Checker = (function(formId){
         setBtnEvent(btn);
     });
 
-})("#calc_for_sheets_Checker");
+})();
