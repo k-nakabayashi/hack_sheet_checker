@@ -1,52 +1,69 @@
 let calc_for_sheets_Checker = (function(formId){
 
     
+    //かなり重要な共通オブジェクト：そこらかしこで利用する。
+
     let result_obj = {},//計算結果を格納するオブジェクト
         form_data = {},//バリデーションを通ったフォーム値
         remainder_result = {//表示結果の切り替えで使う
             "b": false,
             "c": false,
-        };
+        },
+        start_deffered_obj = null,
+        time_func = null,
 
-    //環境変数
-    let DENOMINATOR = function () {
-        return 25;
-    }
-    let NUMERATOR = function() {
-        return 435;
-    }
-
+    
     //ユーティリティ関数
-    let setError,
+        setError,
         initError,
         ajaxFunc,
         pipeline,
         pipelineWithResrouce,
         setEventHandler,
         target_btn,
-        getFormValues;
+        getFormValues,
+        setBtnEvent,
+        stopCalc,
 
     //内部モジュール関数
-    let sheets, 
+        sheets, 
         formComp,
-        view;
+        view,
+        asyncProccess,
 
-    let event_btns;
+        sheets_utils,
 
-//==================================================================
-    let error = null,
+    //内部モジュールのオブジェクト
+        view_obj,
+        formComp_obj,
+        sheets_utils_obj,
+        asyncProccess_obj,
+
+    //起点となるボタン
+        event_btns,
+
+    //エラー
+        error = null,
         error_key,
-        errors;
+        errors,
 
+    //その他
+        featureSet;
+        DENOMINATOR = function () {
+            return 25;
+        },
+         NUMERATOR = function() {
+            return 435;
+        };
 //==================================================================
 //==================================================================
 //==================================================================
 //==================================================================
 //==================================================================
-    //以下、ユーティリティ
+    //ユーティリティ
     getFormValues = function (formValue) {
         return function () {
-            return formComp().getFormValues(formValue);
+            return formComp_obj.getFormValues(formValue);
         }
     }
 
@@ -60,6 +77,7 @@ let calc_for_sheets_Checker = (function(formId){
     setError = function (message) {
         error = message;
     }
+
     initError = function() {
         error = null;
     }
@@ -87,7 +105,6 @@ let calc_for_sheets_Checker = (function(formId){
     pipeline = function () {
         
         let funcs = _.toArray(arguments)
-
         return function () {
             
             let result = _.reduce(funcs, function(data, func){
@@ -124,8 +141,8 @@ let calc_for_sheets_Checker = (function(formId){
     }
 
     setEventHandler = function(target, btn_obj) {
-        let func = view().handlers[btn_obj.handler];
-        return view().config.setEventHandler(target, btn_obj, func)
+        let func = view_obj.handlers[btn_obj.handler];
+        return view_obj.config.setEventHandler(target, btn_obj, func)
     }
 
     setBtnEvent = function (btn_obj) {
@@ -139,21 +156,83 @@ let calc_for_sheets_Checker = (function(formId){
          
     }
     
-//==================================================================
-//==================================================================
-//==================================================================
-//==================================================================
-//==================================================================
-//==================================================================
-    //以下、メインロジック定義
+    stopCalc = function () {
+        return function () {
+            if (start_deffered_obj["reject"]) {
+                start_deffered_obj.reject();
+                start_deffered_obj = null;
+                clearTimeout(time_func);
+                time_func = null;
+            }
+        }
+    }
 
-    sheets = function (target) {
-     
-        let baseCalc,
-            calcAllSheet;
-        let denominator = DENOMINATOR(),
-            numerator = NUMERATOR(),
-            feature;
+
+//==================================================================
+//==================================================================
+
+    //非同期処理
+    asyncProccess = function () {
+        
+        let aysncP,
+            process,
+            reject,
+            startProcess;
+
+        aysncP = function (fook_func) {
+            start_deffered_obj = $.Deferred();
+            process(start_deffered_obj)(fook_func)
+            return start_deffered_obj.promise();
+        }
+
+        process = function(d, delay = 0) {
+
+            return function (main_logic) {
+
+                dalay = main_logic.delay()? main_logic.delay(): delay;
+                console.log("非同期処理：開始")
+                
+                time_func = setTimeout(function(){
+                    //計算処理色々
+                    main_logic.execute()
+
+                    console.log("非同期処理：完了")
+                    d.resolve()
+                }, main_logic.delay())
+            }
+        }
+
+        reject = function() {
+            return false;
+        }
+
+        startProcess = function (anime, fook_func, next_func = null) {
+            let animation = anime();
+            animation.start()
+
+            let base_promise_obj = aysncP(fook_func)
+            let next_promice_obj = next_func? aysncP(next_func): null;
+
+            base_promise_obj
+            .then(null, reject())
+            .then(next_promice_obj, reject())
+            .always(animation.stop);
+
+            return base_promise_obj;
+        }
+
+
+        return {
+            start: startProcess
+        }
+    }
+
+
+//==================================================================
+//==================================================================
+
+    //executeモジュール
+    sheets = function (inner_process) {
 
         //==================================================================
         //==================================================================
@@ -165,103 +244,94 @@ let calc_for_sheets_Checker = (function(formId){
         //     height: values.height,
         //     width: values.height,
         // }
-        excute = function (target) {
-             _.map(target, function(value, key){
-                return baseCalc(key, value)
-           });
-
-           calcAllSheet();
-
-           let keys = Object.keys(result_obj);
-           for (let i = 0; i < keys.length; ++i) {
-            $("#js-value-" + keys[i]).text(result_obj[keys[i]])
-           } 
+        excute = function (/**target**/) {
+            inner_process(sheets_utils_obj.process.calc)
         }
-
-        //==================================================================
-        //==================================================================
-        feature = function () {
-            let chooseItem = function () {
-
-            }
-            return {
-                choose: choose,
-                items: {
-                    set12: {
-
-                    },
-                    set25: {
-
-                    },
-                    set12: {
-
-                    },
-                    set36: {
-
-                    },
-                    set48: {
-
-                    },
-                    set64: {
-
-                    },
-                }
-            }
-        }
-
-        //==================================================================
-
-        baseCalc = function (key, value) {
-
-            ////////////////////////////////////////////////
-            // %435
-            let remainder = (value - denominator)% numerator;
-
-            if (key == "height") {
-                result_obj["b"] = remainder;
-            
-            } else if (key == "width") {
-                result_obj["c"] = remainder;
-            }
-
-            ////////////////////////////////////////////////
-            // /435
-            let base = (value - denominator)/ numerator;
-            let remainder_flag = false;
- 
-            if (remainder <= 10) {
-                remainder_flag = true;
-                base = Math.floor(base);
-            } else {
-                base = Math.ceil(base);
-            }
-            
-            if (key == "height") {
-                result_obj["x"] = base;
-            
-            } else if (key == "width") {
-                result_obj["y"] = base;
-            }
-
-            ////////////////////////////////////////////////
-            if (key == "height") {
-                remainder_result["b"] = remainder_flag;
-            
-            } else if (key == "width") {
-                remainder_result["c"] = remainder_flag;
-            }
-        }
-
-
-        calcAllSheet = function () {
-            result_obj["a"] = result_obj["x"] * result_obj["y"];
-        }
-
-        //==================================================================
+        
         let return_obj = {};
         return_obj[command_name] = excute;
-        return_obj["feature"] = feature
         return return_obj;
+    }
+
+    sheets_utils = function() {
+        let denominator = DENOMINATOR(),
+            numerator = NUMERATOR();
+
+        let utils =  {
+            process: {
+                calc: {
+                    execute: function () {
+                        _.map(form_data, function(value, key){
+                            return utils.baseCalc(key, value)
+                        });
+
+                        utils.calcAllSheet();
+
+                        let keys = Object.keys(result_obj);
+                        for (let i = 0; i < keys.length; ++i) {
+                        $("#js-value-" + keys[i]).text(result_obj[keys[i]])
+                        }
+
+                    },
+
+                    delay: function() {
+                        return 2000;
+                    },
+
+                    fail: function() {
+                        console.log("2fail");
+                    }
+                },
+
+            },
+
+            baseCalc: function (key, value) {
+                
+                ////////////////////////////////////////////////
+                // %435
+                let remainder = (value - denominator)% numerator;
+
+                if (key == "height") {
+                    result_obj["b"] = remainder;
+                
+                } else if (key == "width") {
+                    result_obj["c"] = remainder;
+                }
+
+                ////////////////////////////////////////////////
+                // /435
+                let base = (value - denominator)/ numerator;
+                let remainder_flag = false;
+
+                if (remainder <= 10) {
+                    remainder_flag = true;
+                    base = Math.floor(base);
+                } else {
+                    base = Math.ceil(base);
+                }
+                
+                if (key == "height") {
+                    result_obj["x"] = base;
+                
+                } else if (key == "width") {
+                    result_obj["y"] = base;
+                }
+
+                ////////////////////////////////////////////////
+                if (key == "height") {
+                    remainder_result["b"] = remainder_flag;
+                
+                } else if (key == "width") {
+                    remainder_result["c"] = remainder_flag;
+                }
+            },
+
+            calcAllSheet: function () {
+                result_obj["a"] = result_obj["x"] * result_obj["y"];
+            }
+        }
+
+        return utils;
     }
 
     formComp = function () {
@@ -341,8 +411,6 @@ let calc_for_sheets_Checker = (function(formId){
         return return_obj;
     }
 
-//==================================================================
-//==================================================================
     view = function () {
 
         let config,
@@ -392,20 +460,22 @@ let calc_for_sheets_Checker = (function(formId){
                 }
 
             },
-
-            startLoading: function () {
-
+            
+            loading: function() {
+                let start = function () {
+                    console.log("anime start")
+                }
+                let stop = function () {
+                    console.log("anime stop")
+                }
                 return function () {
-                    
+                    return {
+                        start: start,
+                        stop: stop,
+                    }
                 }
             },
 
-            stopLoading: function () {
-
-                return function () {
-                    
-                }
-            },
         }
 
         let displayResult = function () {
@@ -445,7 +515,7 @@ let calc_for_sheets_Checker = (function(formId){
                 $("#js-Sheet-Area").text(area);
 
                 //おすすめ関連
-                let feature = sheets().feature();
+                let feature = featureSet();
 
                 //おすすめのセット
                 let featured_set = feature.choose(number_of_sheets);
@@ -469,13 +539,11 @@ let calc_for_sheets_Checker = (function(formId){
             },
     
             calcNumbersOfSheets: function (target, btn_obj) {
-                let form_dom = $(formId);
                 let result = pipelineWithResrouce(btn_obj.resource, btn_obj.methods)();
             },
 
             closeModal: function (target, btn_obj) {
-                console.log("closeModal")
-                btn_obj.methods[0]();
+                pipeline.apply(null, btn_obj.methods)();
             }
 
         }
@@ -488,16 +556,48 @@ let calc_for_sheets_Checker = (function(formId){
         }
     }
 
- 
+//==================================================================
+//==================================================================
+    //executeモジュールのオブジェクト取得
+    view_obj = view();
+    formComp_obj = formComp();
+    sheets_utils_obj = sheets_utils();
+    asyncProccess_obj = asyncProccess();
 //==================================================================
 //==================================================================
 //==================================================================
 //==================================================================
-//==================================================================
-
 //==================================================================
     //以下、メインロジック起動
-    
+
+    featureSet = function () {
+        let chooseItem = function () {
+
+        }
+        return {
+            choose: choose,
+            items: {
+                set12: {
+
+                },
+                set25: {
+
+                },
+                set12: {
+
+                },
+                set36: {
+
+                },
+                set48: {
+
+                },
+                set64: {
+
+                },
+            }
+        }
+    }
 
     error_key = "#js-Error"
     errors = {
@@ -546,7 +646,11 @@ let calc_for_sheets_Checker = (function(formId){
         }
     }
 
-    let modal = view().animation.toggleModal();
+    let modal = view_obj.animation.toggleModal();
+
+    let innerProcess = function (func1) {
+        asyncProccess_obj.start(view_obj.animation.loading(), func1, null)
+    }
 
     event_btns = [
 
@@ -562,23 +666,20 @@ let calc_for_sheets_Checker = (function(formId){
             colors: btn_colors2,
             event: "click",
             handler: "calcNumbersOfSheets",
-            methods: [getFormValues(formValue), modal, sheets().calcStart,]
+            resource: resource,//methodsで使う共通の引数の型
+            methods: [getFormValues(formValue), modal, sheets(innerProcess).calcStart,]
         },
 
         {
             dom_key: "#js-Close-Modal",
             event: "click",
             handler: "closeModal",
-            methods: [modal]
+            methods: [stopCalc(), modal]
         }
     ]
-
 
     _.map(event_btns, function (btn) {
         setBtnEvent(btn);
     });
 
-    //2. 処理中断系
-
-    
 })("#calc_for_sheets_Checker");
