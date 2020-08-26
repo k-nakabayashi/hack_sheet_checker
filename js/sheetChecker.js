@@ -48,7 +48,6 @@ let calc_for_sheets_Checker = (function(){
 
     //その他
         featureSet,
-        modal,
         DENOMINATOR = function () {
             return 25;
         },
@@ -765,7 +764,7 @@ let calc_for_sheets_Checker = (function(){
         }
     }
 
-    modal = view_obj.animation.toggleModal();
+    let modal = view_obj.animation.toggleModal();
 
     let modalWrapper = function () {
         if (open_modal_flag == true) {
