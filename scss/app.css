@@ -14,6 +14,15 @@
   margin: auto;
 }
 
+@media screen and (min-width: 769px) {
+  .l-Checker .m-Main {
+    display: flex;
+  }
+  .l-Checker .m-Main > * {
+    width: 50%;
+  }
+}
+
 .l-Checker .m-Result-Area {
   margin-top: 60px;
   margin-bottom: 60px;
@@ -32,7 +41,7 @@
 }
 
 .l-Checker .m-Modal {
-  position: fixed !important;
+  position: absolute !important;
   top: 0;
   bottom: 0;
   left: 0;
@@ -40,12 +49,44 @@
   width: 100vw;
   height: 100%;
   background: rgba(128, 128, 128, 0.5);
-  transform: translateX(-100%);
   z-index: 1;
 }
 
-.l-Checker .m-Modal.isActive {
-  transform: translateX(0);
+@media screen and (min-width: 769px) {
+  .l-Checker .m-Modal {
+    width: 50vw;
+    transform: translateX(-100%);
+    transition-property: transform;
+    transition-duration: .5s;
+  }
+}
+
+@media screen and (min-width: 769px) {
+  .l-Checker .m-Modal.isActive {
+    transition-property: transform;
+    transition-duration: .5s;
+    transform: translateX(0%);
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .l-Checker .m-Modal {
+    z-index: -1;
+    opacity: 0;
+    transform: scale(0.8);
+    transition-property: transform, opacity;
+    transition-duration: 0s;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .l-Checker .m-Modal.isActive {
+    z-index: 0;
+    opacity: 1;
+    transform: scale(1);
+    transition-property: transform, opacity;
+    transition-duration: .5s;
+  }
 }
 
 .l-Checker .m-Modal > * {
@@ -55,6 +96,59 @@
 .l-Checker .m-Modal .a-Btn.forClose {
   position: absolute;
   right: 0;
+}
+
+.l-Checker .m-Modal__inner .a-Btn.forClose {
+  z-index: 1;
+}
+
+.l-Checker .m-Modal__inner:not(.isLoading) .c-Modal-Content {
+  z-index: 0;
+  opacity: 1;
+  transform: scale(1);
+  transition-property: transform, opacity;
+  transition-duration: .5s;
+}
+
+.l-Checker .m-Modal__inner:not(.isLoading) .c-Modal__loading {
+  z-index: -1;
+  opacity: 0;
+  transform: scale(0.8);
+  transition-property: transform, opacity;
+  transition-duration: 0s;
+}
+
+.l-Checker .m-Modal__inner.isLoading .c-Modal-Content {
+  z-index: -1;
+  opacity: 0;
+  transform: scale(0.8);
+  transition-property: transform, opacity;
+  transition-duration: 0s;
+}
+
+@keyframes rotation {
+  0% {
+    transform: rotate(0);
+  }
+  100% {
+    transform: rotate(3600deg);
+  }
+}
+
+.l-Checker .m-Modal__inner.isLoading .c-Modal__loading {
+  z-index: 0;
+  opacity: 1;
+  transform: scale(1);
+  transition-property: transform, opacity;
+  transition-duration: .5s;
+}
+
+.l-Checker .m-Modal__inner.isLoading .c-Modal__loading .a-Rotate {
+  animation: 10s linear infinite rotation;
+}
+
+.l-Checker .a-Input {
+  text-align: center;
 }
 
 .l-Checker .a-Btn {
@@ -92,11 +186,22 @@
   color: orange;
 }
 
-.l-Checker .a-Btn.withChange.forBack:active .ep-Text .ep-Text_inner {
-  transition-property: color, background;
-  transition-duration: 0.5s;
-  background: orange;
-  color: #fff !important;
+@media screen and (max-width: 768px) {
+  .l-Checker .a-Btn.withChange.forBack:active .ep-Text .ep-Text_inner {
+    transition-property: color, background;
+    transition-duration: 0.5s;
+    background: orange;
+    color: #fff !important;
+  }
+}
+
+@media screen and (min-width: 769px) {
+  .l-Checker .a-Btn.withChange.forBack:hover .ep-Text .ep-Text_inner {
+    transition-property: color, background;
+    transition-duration: 0.5s;
+    background: orange;
+    color: #fff !important;
+  }
 }
 
 .l-Checker .a-Btn.withChange.forCalc .ep-Text {
@@ -110,11 +215,22 @@
   color: skyblue;
 }
 
-.l-Checker .a-Btn.withChange.forCalc:active .ep-Text .ep-Text_inner {
-  transition-property: color, background;
-  transition-duration: 0.5s;
-  background: skyblue;
-  color: #fff !important;
+@media screen and (max-width: 768px) {
+  .l-Checker .a-Btn.withChange.forCalc:active .ep-Text .ep-Text_inner {
+    transition-property: color, background;
+    transition-duration: 0.5s;
+    background: skyblue;
+    color: #fff !important;
+  }
+}
+
+@media screen and (min-width: 769px) {
+  .l-Checker .a-Btn.withChange.forCalc:hover .ep-Text .ep-Text_inner {
+    transition-property: color, background;
+    transition-duration: 0.5s;
+    background: skyblue;
+    color: #fff !important;
+  }
 }
 
 .l-Checker .c-Result > * {
@@ -139,30 +255,43 @@
   }
 }
 
+.l-Checker .c-Modal__loading {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  height: 100px;
+  width: 100px;
+}
+
 @media screen and (min-width: 769px) {
-  .l-Checker #js-Active-Area.isActive > * {
-    position: fixed;
+  .l-Checker #js-Active-Area.isActive > .m-Modal {
     display: flex;
     width: 50%;
     top: 0;
     bottom: 0;
   }
-  .l-Checker #js-Active-Area.isActive > *.isLeft {
+  .l-Checker #js-Active-Area.isActive > .m-Modal.isLeft {
     left: 0;
   }
-  .l-Checker #js-Active-Area.isActive > *.isRight {
-    right: 0;
-    background: #fff;
-  }
 }
 
-.l-Checker #js-Header.isActive {
-  position: fixed;
-  left: 0;
-  right: 0;
-}
-
-.l-Checker #js-Error.a-Text {
+.l-Checker #js-Error.a-Text, .l-Checker #js-Error-forHeight.a-Text, .l-Checker #js-Error-forWidth.a-Text {
   height: 30px;
   line-height: 30px;
+}
+
+.l-Checker #js-Error-forHeight, .l-Checker #js-Error-forWidth {
+  display: none;
+}
+
+@media screen and (min-width: 769px) {
+  .l-Checker #js-Error-forHeight, .l-Checker #js-Error-forWidth {
+    display: block;
+  }
+  .l-Checker #js-Error {
+    display: none;
+  }
 }

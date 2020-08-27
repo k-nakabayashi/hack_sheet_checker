@@ -55,104 +55,118 @@
 		</h1>
 	</header>
 
-	<main>
-		<div class="text-01">
-			<p>組み合わせて<br>フィットして。</p>
-			<p>お好きな場所の必要な枚数が簡単にわかる計算機です。購入前のご検討や購入後の設置時にお役立て下さい。</p>
+	<main class="m-Main">
+		<div>
+			<div class="text-01">
+				<p>組み合わせて<br>フィットして。</p>
+				<p>お好きな場所の必要な枚数が簡単にわかる計算機です。購入前のご検討や購入後の設置時にお役立て下さい。</p>
+			</div>
+			<img src="img/panel_img.jpg" width="100%" alt="パネル">
 		</div>
-		<img src="img/panel_img.jpg" width="100%" alt="パネル">
-		<div class="text-02">
-			<p>測った長さを入力。</p>
-		</div>
-		<form>
-			<div class="form-area">
+		<div>
+			<div class="text-02">
+				<p>測った長さを入力。</p>
+			</div>
+			<form>
+				<div class="form-area">
 
 
 
-				<div id="js-Active-Area">
-					<div class="m-Modal isLeft" id="js-Modal">
-						<div class="u-Container">
-							<div class="a-Btn forClose" id="js-Close-Modal">閉じる</div>
-				
-							<div class="output-area c-Modal-Content">
-								<div class="output-img c-Img-Area">
-									<div class="output-panel01 a-Img">
-										<img src="img/panel_img-01.jpg" width="100%" alt="パネル" id="js-Pannel-Img">
-									</div>
-									<div class="output-text01">
-									<p class="panel01" id="js-Num-Sheets"></p>
-									<p class="panel01-min" id="js-Sheet-Area"></p>
-									</div>
-								</div>
-								<div class="output-text02" style="color: #fff;">
-									<p class="text-ttl01" id="js-Advice-Title"></p>
-									<p class="text-mm01" id="js-Advice-Top"></p>
-									<p class="text-mm01" id="js-Advice-Bottom"></p>
-								</div>
-								<div class="output-prods">
-									<p class="text-ttl02">おすすめのセット</p>
-									<div class="output-thumb">
-										<p class="prods-thumb">
-											<img class="output-thumb" src="img/thumb12.png" id="js-Thumb">
-										</p>
-										<div class="text-link">
-											<p class="text-name01">
-												<a class="text-name01-link" id="js-Feature-Link--forTop" href="">10mm厚4.5畳用36枚セット<span>￥2,990税込</span></a>
-											</p>
-											<p class="text-name02">
-												<a class="text-name01-link" id="js-Feature-Link--forBottom" href="">18mm厚4.5畳用36枚セット<span>￥2,990税込</span></a>
-											</p>
+					<div id="js-Active-Area">
+						<div class="m-Modal isLeft" id="js-Modal">
+							<div class="m-Modal__inner u-Container" id="js-Loading">
+
+								<div>
+									<div class="a-Btn forClose" id="js-Close-Modal">閉じる</div>
+									<div class="c-Modal-Content">
+										<div class="output-area">
+											<div class="output-img c-Img-Area">
+												<div class="output-panel01 a-Img">
+													<img src="img/panel_img-01.jpg" width="100%" alt="パネル" id="js-Pannel-Img">
+												</div>
+												<div class="output-text01">
+												<p class="panel01" id="js-Num-Sheets"></p>
+												<p class="panel01-min" id="js-Sheet-Area"></p>
+												</div>
+											</div>
+											<div class="output-text02" style="color: #fff;">
+												<p class="text-ttl01" id="js-Advice-Title"></p>
+												<p class="text-mm01" id="js-Advice-Top"></p>
+												<p class="text-mm01" id="js-Advice-Bottom"></p>
+											</div>
+											<div class="output-prods">
+												<p class="text-ttl02">おすすめのセット</p>
+												<div class="output-thumb">
+													<p class="prods-thumb">
+														<img class="output-thumb" src="img/thumb12.png" id="js-Thumb">
+													</p>
+													<div class="text-link">
+														<p class="text-name01">
+															<a class="text-name01-link" id="js-Feature-Link--forTop" href="">10mm厚4.5畳用36枚セット<span>￥2,990税込</span></a>
+														</p>
+														<p class="text-name02">
+															<a class="text-name01-link" id="js-Feature-Link--forBottom" href="">18mm厚4.5畳用36枚セット<span>￥2,990税込</span></a>
+														</p>
+													</div>
+												</div>
+											</div>
 										</div>
 									</div>
 								</div>
-							</div>
-				
-						</div>
-					</div>
-					<div class="isRight">
-						<div class="input-area">
-							<p>
-								<label>❶</label>
-								<input type="number" id="vertical" size="10" maxlength="8" value="0.0" onchange="CountPanel();">cm
-							</p>
-							<p>
-								<label>❷</label>
-								<input type="text" id="horizontal" size="10" maxlength="8" value="0.0" onchange="CountPanel();">cm
-							</p>
-						</div>
-					
-						<div class="u-Btn-Wrapper">
-							<div id="js-Btn--forBack" class="a-Btn forBack withChange">
-								<div class="ep-Text">
-									<div class="ep-Text_inner">商品ページに<br>戻る</div>
-								</div>
-							</div>
-							<div id="js-Btn--forCalc" class="a-Btn forCalc withChange">
-								<div class="ep-Text">
-									<div class="ep-Text_inner">必要枚数を<br>計算する</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<!-- <div class="btn-area">
-					<p>
-						<input type="submit" value="必要枚数を計算する">
-					</p>
-				</div> -->
-				<section class="u-Container m-Result-Area">
-					<h2>結果表示</h2>
-					<ul class="c-Result">
-						<li>x: <span id="js-value-x">0</span></li>
-						<li>y: <span id="js-value-y">0</span></li>
-						<li>a: <span id="js-value-a">0</span></li>
-						<li>b: <span id="js-value-b">0</span></li>
-						<li>c: <span id="js-value-c">0</span></li>
-					</ul>
-				</section>
 
-			</div>
-		</form>
+								<div class="c-Modal__loading">
+									<div class="a-Rotate" id="js-Anime1">kaiten</div>
+									<div class="a-Txt">計算中<span class="ep-Anime" id="js-Anime2"></span></div>
+									<p>loading</p>
+								</div>
+
+							</div>
+						</div>
+						<div>
+							<div class="input-area">
+								<p>
+									<label>❶</label>
+									<input class="a-Input" type="text" id="height" size="10" maxlength="8" value="0">mm
+								</p>
+								<p class="a-Text" id="js-Error-forHeight"></p>
+								<p>
+									<label>❷</label>
+									<input class="a-Input" type="text" id="width" size="10" maxlength="8" value="0">mm
+								</p>
+								<p class="a-Text" id="js-Error-forWidth"></p>
+								<p class="a-Text" id="js-Error"></p>
+							</div>
+						
+							<div class="u-Btn-Wrapper">
+								<div id="js-Btn--forBack" class="a-Btn forBack withChange">
+									<div class="ep-Text">
+										<div class="ep-Text_inner">商品ページに<br>戻る</div>
+									</div>
+								</div>
+								<div id="js-Btn--forCalc" class="a-Btn forCalc withChange">
+									<div class="ep-Text">
+										<div class="ep-Text_inner">必要枚数を<br>計算する</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+		
+					<section class="u-Container m-Result-Area">
+						<h2>結果表示</h2>
+						<ul class="c-Result">
+							<li>x: <span id="js-value-x">0</span></li>
+							<li>y: <span id="js-value-y">0</span></li>
+							<li>a: <span id="js-value-a">0</span></li>
+							<li>b: <span id="js-value-b">0</span></li>
+							<li>c: <span id="js-value-c">0</span></li>
+						</ul>
+					</section>
+
+				</div>
+			</form>
+		</div>
+
 	</main>
 
 

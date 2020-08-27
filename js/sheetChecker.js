@@ -12,9 +12,12 @@ let calc_for_sheets_Checker = (function(){
         start_deffered_obj = null,
         time_func = null,
         open_modal_flag = false,
-
+        modalContent = null,
+        calc_process_flag = false,
     
     //ユーティリティ関数
+        displayNoError,
+        displayError,
         setError,
         initError,
         pipeline,
@@ -43,6 +46,7 @@ let calc_for_sheets_Checker = (function(){
 
     //エラー
         error = null,
+        error_for_pc,
         error_key,
         errors,
 
@@ -72,33 +76,44 @@ let calc_for_sheets_Checker = (function(){
             dom: target,
         }
     }
+    
+    displayNoError = function () {
+        $(error_key).text("");
+        _.map(error_for_pc, function(target){
+            $(target.key).text("");
+        })
+    }
 
-    setError = function (message) {
-        error = message;
+    displayError = function () {
+        $(error_key).text(error);
+        _.map(error_for_pc, function(target){
+            console.log($(target.key));
+            $(target.key).text(target.message);
+        })
+        initError();
+    }
+
+    setError = function (message, target = null) {
+        error = "両辺共に" + message;
+        if (target != null) {
+            error_for_pc[target]["message"] = message;
+        }
     }
 
     initError = function() {
         error = null;
+        error_for_pc = {
+            height: {
+                key: "#js-Error-forHeight",
+                message: "",
+            },
+            width: {
+                key: "#js-Error-forWidth",
+                message: "",
+            }
+        };
     }
 
-    ajaxFunc = function (ajaxObj) {
-
-        let ajaxStart,
-            ajaxStop;
-
-        ajaxStart = function () {
-            return ajaxObj;
-        }
-
-        ajaxStop = function () {
-
-        }
-
-        return {
-            ajaxStart: ajaxStart,
-            ajaxStop: ajaxStop,
-        }
-    }
 
 
     pipeline = function () {
@@ -115,23 +130,17 @@ let calc_for_sheets_Checker = (function(){
     }
 
     pipelineWithResrouce = function (resource) {
-        let funcs = _.tail(arguments)[0]
+
+        let funcs = _.tail(arguments)[0];
+
         return function () {
-            
-            let resource_func = function (data) {
-                if (resource && data) {
-                    return resource(data)
-                } else {
-                    return data;
-                }
-            }
 
             let result = _.reduce(funcs, function(data, func) {
                 if (data === false) {
                     return false;
                 }
 
-                let resource_data = resource_func(data);
+                let resource_data = resource(data);
                 return func(resource_data);
             }, {})
 
@@ -162,6 +171,7 @@ let calc_for_sheets_Checker = (function(){
                 start_deffered_obj = null;
                 clearTimeout(time_func);
                 time_func = null;
+                calc_process_flag = false;
             }
         }
     }
@@ -210,7 +220,7 @@ let calc_for_sheets_Checker = (function(){
             return false;
         }
 
-        startProcess = function (anime, fook_func, innet_funcs) {
+        startProcess = async function (anime, fook_func, innet_funcs) {
             let animation = anime();
             animation.start()
 
@@ -350,21 +360,19 @@ let calc_for_sheets_Checker = (function(){
         let excute = function (retrieveFormValues) {
             let return_obj = {};
             let values = retrieveFormValues()
-
+            
             _.map(values, function (value, key) {
-                let result = validate(value);
+                let result = validate(value, key);
                 return_obj[key] = result;
             });
-          
+            
             if (error == null) {
-                $(error_key).text("");
+                displayNoError();
                 form_data = _.clone(return_obj);
                 return return_obj;
             }
 
-            $(error_key).text(error);
-            initError();
-
+            displayError();
             return false;
         }
 
@@ -387,25 +395,23 @@ let calc_for_sheets_Checker = (function(){
         //type=numberからの受け取り値って、何型？
         //String target 
         //return undifined or Number
-        validate = function (target) {
-    
+        validate = function (value, key) {
             //半角数字判定
-            if (checkType(/^([1-9]\d*|0)$/, target)) {
-                return parseInt(target, 10);
+            try {
+                if (checkType(/^([1-9]\d*|0*).??([1-9]\d*|0*)$/, value)) {
+                    return parseFloat(value, 10);
+                } 
+
+                //全角数字判定
+                if (checkType(/^([０-９]*)$/, value)) {
+                    value = toHalfWidth(value);
+                    return parseInt(value, 10);
+                }
+                setError(errors["ERROR1"], key);
+            } catch(e) {
+                setError(errors["ERROR1"], key);
             }
-            
-            //全角数字判定
-            if (checkType(/^０/, target)) {
-                setError(errors["ERROR1"]);
-                return;
-            }
-            //全角数字判定
-            if (checkType(/^([０-９]*)$/, target)) {
-                target = toHalfWidth(target);
-                return parseInt(target, 10);
-            }
-            
-            setError(errors["ERROR1"]);
+
         }
 
         //==================================================================
@@ -453,7 +459,7 @@ let calc_for_sheets_Checker = (function(){
                 let that = this;
                 return function () {
                     target.dom.on(btn_obj.event, function() {
-                        
+
                         func(target, btn_obj);
                         target.active_flag = that.toggleFlag(target);
                     })
@@ -468,7 +474,7 @@ let calc_for_sheets_Checker = (function(){
                 let wrapper_dom = $("#js-Active-Area")
                 let dom = $("#js-Modal");
 
-                return function (data = null) {
+                return function (data) {
                     
                     header_dom.toggleClass("isActive");
                     wrapper_dom.toggleClass("isActive")
@@ -484,11 +490,15 @@ let calc_for_sheets_Checker = (function(){
             },
             
             loading: function() {
+                let dom = $("#js-Loading");
                 let start = function () {
-                    console.log("anime start")
+                    console.log("anime start");
+                    $("#js-Loading").addClass("isLoading");
                 }
                 let stop = function () {
                     console.log("anime stop")
+                    $("#js-Loading").removeClass("isLoading");
+                    
                 }
                 return function () {
                     return {
@@ -497,8 +507,6 @@ let calc_for_sheets_Checker = (function(){
                     }
                 }
             },
-
-
         }
 
         initAdviceDom = function () {
@@ -518,18 +526,24 @@ let calc_for_sheets_Checker = (function(){
             },
     
             calcNumbersOfSheets: function (target, btn_obj) {
-                if (target.dom.hasClass("isActive")) {
+
+                if (calc_process_flag == true) {
                     return;
                 }
+                calc_process_flag = true;
+                //連打対策
+                // if (start_flag == true) {
+                //     console.log(async_process_flag)
+                //     return;
+                // }
+     
                 target.dom.addClass("isActive").on('transitionend webkitTransitionEnd',function(){
                     setTimeout(function(){
                         target.dom.removeClass("isActive");
                     }, 500);
                 })
-                
-                console.log("open_modal_flag : " + open_modal_flag)
 
-                let result = pipelineWithResrouce(btn_obj.resource, btn_obj.methods)();
+                pipelineWithResrouce(btn_obj.resource, btn_obj.methods)();
             },
 
             closeModal: function (target, btn_obj) {
@@ -555,6 +569,8 @@ let calc_for_sheets_Checker = (function(){
     formComp_obj = formComp();
     sheets_utils_obj = sheets_utils();
     asyncProccess_obj = asyncProccess();
+
+    modalContent = view_obj.targetDom;
 //==================================================================
 //==================================================================
 //==================================================================
@@ -662,17 +678,31 @@ let calc_for_sheets_Checker = (function(){
     error_key = "#js-Error"
     errors = {
         ERROR1: "⚠数字を入力してください。",
+        ERROR2: "25mm以上長さが必要です。",
+        ERROR3: "整数で記入してください。",
     }
     
     let formValue = function () {
-        let height = $("#vertical").val();
-        let width = $("#horizontal").val();
+        let height = $("#height").val();
+        let width = $("#width").val();
 
         return {
             height: height,
             width: width,
         }
     }
+
+    error_for_pc = {
+        height: {
+            key: "#js-Error-forHeight",
+            message: "",
+        },
+        width: {
+            key: "#js-Error-forWidth",
+            message: "",
+        }
+    };
+
 
     let processResultDisplay = function (target_dom) {
 
@@ -720,7 +750,7 @@ let calc_for_sheets_Checker = (function(){
 
                     //面積表示
                     area = (form_data["height"] * form_data["width"]) / 1000000;
-                    target_dom.area.html(`${area}cm&#xB2;`);
+                    target_dom.area.html(`${area}m&#xB2;`);
                 }());
 
                 //おすすめのセット
@@ -753,29 +783,55 @@ let calc_for_sheets_Checker = (function(){
                     target_dom.advice_bottom.html(result_page["bottom"]);
                 }())
 
+
+                setTimeout(function(){
+                    calc_process_flag = false;
+                }, 1000)
             };
+    }
+
+    let checkParseResult = function (data) {
+        let denominator = DENOMINATOR();
+        _.map(data, function(value, key){
+
+            if (!Number.isInteger(value)) {
+                setError(errors["ERROR3"], key);
+                return false;
+            }
+            if (value < denominator) {
+                setError(errors["ERROR2"], key);
+                return false;
+            }
+        });
+        if (error != null) {
+            displayError();
+            
+            return false;
+        }
+        
+        return data;
     }
 
     //各種ボタンのイベント設定
     let resource = function(data) {
         return {
             height: data.height,
-            width: data.height,
+            width: data.width,
         }
     }
 
     let modal = view_obj.animation.toggleModal();
 
-    let modalWrapper = function () {
+    let modalWrapper = function (data) {
         if (open_modal_flag == true) {
-            return;
+            return data;
         }
-        return modal();
+        return modal(data);
     }
     
     let innerProcess = function (func1) {
         let inner_funcs = [
-            processResultDisplay(view_obj.targetDom),
+            processResultDisplay(modalContent),
         ];
 
         asyncProccess_obj.start(view_obj.animation.loading(), func1, inner_funcs)
@@ -794,9 +850,8 @@ let calc_for_sheets_Checker = (function(){
             event: "click",
             handler: "calcNumbersOfSheets",
             resource: resource,//methodsで使う共通の引数の型
-            methods: [getFormValues(formValue), modalWrapper, sheets(innerProcess).calcStart]
+            methods: [getFormValues(formValue), checkParseResult, modalWrapper, sheets(innerProcess).calcStart]
         },
-
         {
             dom_key: "#js-Close-Modal",
             event: "click",

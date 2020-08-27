@@ -1,3 +1,13 @@
+@mixin media-md {
+    @media screen and (min-width: 769px) {
+        @content;
+    }
+}
+@mixin media-md-max {
+    @media screen and (max-width: 768px) {
+        @content;
+    }
+}
 .l-Checker {
     > *:not(header) {
         position: static;
@@ -19,6 +29,15 @@
 
     //////////////////////////////////////////////////////
     //module
+    @include media-md() {
+        .m-Main {
+            display: flex;
+            > * {
+                width: 50%;
+            }
+        }
+    }
+
     .m-Result-Area {
         margin-top: 60px;
         margin-bottom: 60px;
@@ -36,8 +55,22 @@
         }
     }
 
+    @mixin displayAnime {
+        z-index: -1;
+        opacity: 0;
+        transform: scale(0.8);
+        transition-property: transform, opacity;
+        transition-duration: 0s;
+    }
+    @mixin displayAnime__active {
+        z-index: 0;
+        opacity: 1;
+        transform: scale(1);
+        transition-property: transform, opacity;
+        transition-duration: .5s;
+    }
     .m-Modal {
-        position: fixed!important;
+        position: absolute!important;
         top: 0;
         bottom: 0;
         left: 0;
@@ -45,12 +78,31 @@
         width: 100vw;
         height: 100%;
         background: rgba($color: gray, $alpha: 0.5);
-        transform: translateX(-100%);
         z-index: 1;
+        
+        @include media-md() {
+            width: 50vw;
+            transform: translateX(-100%);
+            transition-property: transform;
+            transition-duration: .5s;
+        }
         &.isActive {
-            transform: translateX(0);
+            @include media-md() {
+                transition-property: transform;
+                transition-duration: .5s;
+                transform: translateX(0%);
+            }
+  
         }
 
+        @include media-md-max() {
+            @include displayAnime();
+        }
+        &.isActive {
+            @include media-md-max() {
+                @include displayAnime__active();
+            }
+        }
         > * {
             position: relative;
         }
@@ -60,9 +112,45 @@
             right: 0;
         }
     }
+
+    .m-Modal__inner {
+        .a-Btn.forClose {
+            z-index: 1;
+        }
+        &:not(.isLoading) {
+            .c-Modal-Content {
+                @include displayAnime__active();
+            }
+            .c-Modal__loading {
+                @include displayAnime();
+            }
+        }
+        &.isLoading {
+            // .a-Btn.forClose {
+            //     right: -150%;
+            // }
+            
+            .c-Modal-Content {
+                @include displayAnime();
+            }
+
+            @keyframes rotation{
+                0%{ transform:rotate(0);}
+                100%{ transform:rotate(3600deg); }
+            }
+            .c-Modal__loading {
+                @include displayAnime__active();
+                .a-Rotate {
+                    animation:10s linear infinite rotation;
+                }
+            }
+        }
+    }
     //////////////////////////////////////////////////////
     //Atomic
-
+    .a-Input {
+        text-align: center;
+    }
 
     .a-Btn {
         display: inline-block;
@@ -97,7 +185,8 @@
                     color: orange;
                 }
             }
-            &:active {
+
+            @mixin btnAnime {
                 .ep-Text {
                     .ep-Text_inner {
                         transition-property: color, background;
@@ -107,6 +196,17 @@
                     }
                 }
             }
+            @include media-md-max(){
+                &:active {
+                    @include btnAnime();
+                }
+            }
+            @include media-md() {
+                &:hover {
+                    @include btnAnime();
+                }
+            }
+
         }
 
         &.forCalc {
@@ -119,7 +219,7 @@
                     color: skyblue;
                 }
             }
-            &:active {
+            @mixin btnAnime {
                 .ep-Text {
                     .ep-Text_inner {
                         transition-property: color, background;
@@ -127,6 +227,17 @@
                         background: skyblue;
                         color: #fff!important;
                     }
+                }
+            }
+
+            @include media-md-max(){
+                &:active {
+                    @include btnAnime();
+                }
+            }
+            @include media-md() {
+                &:hover {
+                    @include btnAnime();
                 }
             }
         }
@@ -152,22 +263,33 @@
                 img {
                     object-fit: contain;
                     max-height: 40vh;
-                    @media screen and (min-width: 769px) {
+                    @include media-md() {
                         max-height: 40vh;
                     }
-
                 }
             }
         }
     }
+    .c-Modal__loading {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        margin: auto;
+        height: 100px;
+        width: 100px;
+    }
+
+
+
 
 
     //////////////////////////////////////////////////////
     //js用
     #js-Active-Area.isActive {
-        @media screen and (min-width: 769px) {
-            > * {
-                position: fixed;
+        @include media-md() {
+            > .m-Modal {
                 display: flex;
                 width: 50%;
                 top: 0;
@@ -176,24 +298,28 @@
                 &.isLeft {
                     left: 0;
                 }
-                &.isRight {
-                    right: 0;
-                    background: #fff;
-                }
             }
+
+
         }
     }
 
-    #js-Header.isActive {
-        position: fixed;
-        left: 0;
-        right: 0;
-    }
-
-    #js-Error {
+    #js-Error, #js-Error-forHeight, #js-Error-forWidth {
         &.a-Text {
             height: 30px;
             line-height: 30px;
+        }
+    }
+    #js-Error-forHeight, #js-Error-forWidth {
+        display: none;
+    }
+
+    @include media-md() {
+        #js-Error-forHeight, #js-Error-forWidth {
+            display: block;
+        }
+        #js-Error {
+            display: none;
         }
     }
 }
