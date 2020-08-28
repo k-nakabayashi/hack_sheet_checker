@@ -117,6 +117,7 @@
         .a-Btn.forClose {
             z-index: 1;
         }
+
         &:not(.isLoading) {
             .c-Modal-Content {
                 @include displayAnime__active();
@@ -143,7 +144,68 @@
                 .a-Rotate {
                     animation:10s linear infinite rotation;
                 }
-                .
+                
+                @keyframes flashing1 {
+                    0% {
+                        opacity: 0;
+                    }
+                    25% {
+                        opacity: 1;
+                    }
+                    50% {
+                        opacity: 1;
+                    }
+                    75% {
+                        opacity: 1;
+                    }
+                    100% {
+                        opacity: 0;
+                    }
+                }
+                @keyframes flashing2 {
+                    0% {
+                        opacity: 0;
+                    }
+                    25% {
+                        opacity: 0;
+                    }
+                    50% {
+                        opacity: 1;
+                    }
+                    75% {
+                        opacity: 1;
+                    }
+                    100% {
+                        opacity: 0;
+                    }
+                }
+                @keyframes flashing3 {
+                    0% {
+                        opacity: 0;
+                    }
+                    25% {
+                        opacity: 0;
+                    }
+                    50% {
+                        opacity: 1;
+                    }
+                    75% {
+                        opacity: 1;
+                    }
+                    100% {
+                        opacity: 0;
+                    }
+                }
+                .a-Anime.forflash {
+                    @for $i from 1 through 3 {
+                        > *:nth-child(#{$i}) {
+                            animation-name: flashing#{$i};
+                            animation-duration: 0.5s;
+                            animation-iteration-count: infinite;
+                        }
+
+                    }
+                }
             }
         }
     }
@@ -272,6 +334,8 @@
         }
     }
     .c-Modal__loading {
+        font-size: 40px;
+        font-weight: bold;
         position: absolute;
         top: 0;
         bottom: 0;
@@ -279,12 +343,34 @@
         right: 0;
         margin: auto;
         height: 100px;
-        width: 100px;
+        width: 100vw;
+        color: #fff;
+        text-align: center;
+
+        .a-Rotate {
+            display: inline-block;
+        }
+        .c-Flash {
+            margin-top: 30px;
+            margin-bottom: 10px;
+
+            > * {
+                display: inline-block;
+                position: relative;
+            }
+        }
+        .c-Flash__inner {
+            position: absolute;
+            bottom: 0;
+            right: -50%;
+            .a-Anime {
+                > * {
+                    display: inline;
+                }
+            }
+        }
+
     }
-
-
-
-
 
     //////////////////////////////////////////////////////
     //js用
@@ -300,8 +386,6 @@
                     left: 0;
                 }
             }
-
-
         }
     }
 
