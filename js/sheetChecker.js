@@ -84,7 +84,6 @@ let calc_for_sheets_Checker = (function(){
 
     displayError = function () {
         $(error_key).text(error);
-        console.log(error_for_pc);
         _.map(error_for_pc, function(target){
             $(target.key).text(target.message);
         })
@@ -172,7 +171,6 @@ let calc_for_sheets_Checker = (function(){
                 }
 
                 let resource_data = resource(data);
-                // console.log(resource_data);
                 return func(resource_data);
             }, {})
 
@@ -234,7 +232,6 @@ let calc_for_sheets_Checker = (function(){
             return function (main_logic) {
                 let innerFuncs = _.tail(arguments)[0][0];
                 dalay = main_logic.delay()? main_logic.delay(): delay;
-                console.log("非同期処理：開始")
                 
                 time_func = setTimeout(function(){
                     //計算処理色々
@@ -242,7 +239,6 @@ let calc_for_sheets_Checker = (function(){
                     _.map(innerFuncs, function(func){
                         func()
                     })
-                    console.log("非同期処理：完了")
                     d.resolve()
                 }, main_logic.delay())
             }
@@ -305,7 +301,6 @@ let calc_for_sheets_Checker = (function(){
             process: {
                 calc: {
                     execute: function () {
-                        console.log("process : calc")
                         _.map(form_data, function(value, key){
                             return utils.baseCalc(key, value)
                         });
@@ -324,7 +319,6 @@ let calc_for_sheets_Checker = (function(){
                     },
 
                     fail: function() {
-                        console.log("2fail");
                     }
                 },
 
@@ -539,11 +533,9 @@ let calc_for_sheets_Checker = (function(){
             
             loading: function() {
                 let start = function () {
-                    console.log("start")
                     $("#js-Loading").addClass("isLoading");
                 }
                 let stop = function () {
-                    console.log("finish")
                     $("#js-Loading").removeClass("isLoading");
                     
                 }
@@ -836,15 +828,11 @@ let calc_for_sheets_Checker = (function(){
                     target_dom.advice_bottom.html(result_page["bottom"]);
                 }())
 
-
-                setTimeout(function(){
-                    calc_process_flag = false;
-                }, 1000)
+                calc_process_flag = false;
             };
     }
 
     let checkParseResult = function (data) {
-        console.log(data)
         let denominator = DENOMINATOR();
         _.map(data, function(value, key){
 
@@ -867,6 +855,9 @@ let calc_for_sheets_Checker = (function(){
 
     //各種ボタンのイベント設定
     let resource = function(data) {
+        if (data == null || data == undefined || data == {}) {
+            return;
+        }
         return {
             height: data.height,
             width: data.width,
