@@ -855,7 +855,7 @@ let calc_for_sheets_Checker = (function(){
 
     //各種ボタンのイベント設定
     let resource = function(data) {
-        if (data == null || data == undefined || data == {}) {
+        if (data == undefined) {
             return;
         }
         return {
