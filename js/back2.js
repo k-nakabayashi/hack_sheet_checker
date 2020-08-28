@@ -14,9 +14,10 @@ let calc_for_sheets_Checker = (function(){
         open_modal_flag = false,
         modalContent = null,
         calc_process_flag = false,
-
     
     //ユーティリティ関数
+        displayNoError,
+        displayError,
         setError,
         initError,
         pipeline,
@@ -75,6 +76,7 @@ let calc_for_sheets_Checker = (function(){
             dom: target,
         }
     }
+    
     displayNoError = function () {
         $(error_key).text("");
         _.map(error_for_pc, function(target){
@@ -84,16 +86,12 @@ let calc_for_sheets_Checker = (function(){
 
     displayError = function () {
         $(error_key).text(error);
-        console.log(error_for_pc);
         _.map(error_for_pc, function(target){
             $(target.key).text(target.message);
         })
         calc_process_flag = false;
         initError();
     }
-    // setError = function (message) {
-    //     error = message;
-    // }
 
     setError = function (message, target = null) {
         error = "両辺共に" + message;
@@ -101,10 +99,6 @@ let calc_for_sheets_Checker = (function(){
             error_for_pc[target]["message"] = message;
         }
     }
-    // initError = function() {
-    //     calc_process_flag = false;
-    //     error = null;
-    // }
 
     initError = function() {
         error = null;
@@ -135,31 +129,6 @@ let calc_for_sheets_Checker = (function(){
         }
     }
 
-    // pipelineWithResrouce = function (resource) {
-    //     let funcs = _.tail(arguments)[0]
-    //     return function () {
-            
-    //         let resource_func = function (data) {
-    //             if (resource && data) {
-    //                 return resource(data)
-    //             } else {
-    //                 return data;
-    //             }
-    //         }
-
-    //         let result = _.reduce(funcs, function(data, func) {
-    //             if (data === false) {
-    //                 return false;
-    //             }
-
-    //             let resource_data = resource_func(data);
-    //             return func(resource_data);
-    //         }, {})
-
-    //         return result;
-    //     }
-    // }
-
     pipelineWithResrouce = function (resource) {
 
         let funcs = _.tail(arguments)[0];
@@ -172,7 +141,6 @@ let calc_for_sheets_Checker = (function(){
                 }
 
                 let resource_data = resource(data);
-                // console.log(resource_data);
                 return func(resource_data);
             }, {})
 
@@ -234,7 +202,6 @@ let calc_for_sheets_Checker = (function(){
             return function (main_logic) {
                 let innerFuncs = _.tail(arguments)[0][0];
                 dalay = main_logic.delay()? main_logic.delay(): delay;
-                console.log("非同期処理：開始")
                 
                 time_func = setTimeout(function(){
                     //計算処理色々
@@ -242,7 +209,6 @@ let calc_for_sheets_Checker = (function(){
                     _.map(innerFuncs, function(func){
                         func()
                     })
-                    console.log("非同期処理：完了")
                     d.resolve()
                 }, main_logic.delay())
             }
@@ -252,7 +218,7 @@ let calc_for_sheets_Checker = (function(){
             return false;
         }
 
-        startProcess = function (anime, fook_func, innet_funcs) {
+        startProcess = async function (anime, fook_func, innet_funcs) {
             let animation = anime();
             animation.start()
 
@@ -305,7 +271,6 @@ let calc_for_sheets_Checker = (function(){
             process: {
                 calc: {
                     execute: function () {
-                        console.log("process : calc")
                         _.map(form_data, function(value, key){
                             return utils.baseCalc(key, value)
                         });
@@ -323,9 +288,7 @@ let calc_for_sheets_Checker = (function(){
                         return 2000;
                     },
 
-                    fail: function() {
-                        console.log("2fail");
-                    }
+
                 },
 
             },
@@ -394,17 +357,16 @@ let calc_for_sheets_Checker = (function(){
             let values = retrieveFormValues()
             
             _.map(values, function (value, key) {
-                let result = validate(value);
+                let result = validate(value, key);
                 return_obj[key] = result;
             });
+            
             if (error == null) {
                 displayNoError();
                 form_data = _.clone(return_obj);
                 return return_obj;
             }
 
-            // $(error_key).text(error);
-            // initError();
             displayError();
             return false;
         }
@@ -429,6 +391,7 @@ let calc_for_sheets_Checker = (function(){
         //String target 
         //return undifined or Number
         validate = function (value, key) {
+            //半角数字判定
             try {
                 if (checkType(/^([1-9]\d*|0*).??([1-9]\d*|0*)$/, value)) {
                     return parseFloat(value, 10);
@@ -443,24 +406,6 @@ let calc_for_sheets_Checker = (function(){
             } catch(e) {
                 setError(errors["ERROR1"], key);
             }
-            // //半角数字判定
-            // if (checkType(/^([1-9]\d*|0)$/, target)) {
-            //     return parseInt(target, 10);
-            // }
-            
-            // //全角数字判定
-            // if (checkType(/^０/, target)) {
-            //     setError(errors["ERROR1"]);
-            //     return;
-            // }
-            // //全角数字判定
-            // if (checkType(/^([０-９]*)$/, target)) {
-            //     target = toHalfWidth(target);
-            //     return parseInt(target, 10);
-            // }
-            
-            // setError(errors["ERROR1"]);
-            //半角数字判定
 
         }
 
@@ -507,7 +452,7 @@ let calc_for_sheets_Checker = (function(){
                 let that = this;
                 return function () {
                     target.dom.on(btn_obj.event, function() {
-                        
+
                         func(target, btn_obj);
                         target.active_flag = that.toggleFlag(target);
                     })
@@ -522,7 +467,7 @@ let calc_for_sheets_Checker = (function(){
                 let wrapper_dom = $("#js-Active-Area")
                 let dom = $("#js-Modal");
 
-                return function (data = null) {
+                return function (data) {
                     
                     header_dom.toggleClass("isActive");
                     wrapper_dom.toggleClass("isActive")
@@ -539,11 +484,9 @@ let calc_for_sheets_Checker = (function(){
             
             loading: function() {
                 let start = function () {
-                    console.log("start")
                     $("#js-Loading").addClass("isLoading");
                 }
                 let stop = function () {
-                    console.log("finish")
                     $("#js-Loading").removeClass("isLoading");
                     
                 }
@@ -554,8 +497,6 @@ let calc_for_sheets_Checker = (function(){
                     }
                 }
             },
-
-
         }
 
         initAdviceDom = function () {
@@ -579,14 +520,12 @@ let calc_for_sheets_Checker = (function(){
             },
     
             calcNumbersOfSheets: function (target, btn_obj) {
+
                 if (calc_process_flag == true) {
                     return;
                 }
                 calc_process_flag = true;
-
-                // if (target.dom.hasClass("isActive")) {
-                //     return;
-                // }
+     
                 target.dom.addClass("isActive").on('transitionend webkitTransitionEnd',function(){
                     setTimeout(function(){
                         target.dom.removeClass("isActive");
@@ -627,7 +566,6 @@ let calc_for_sheets_Checker = (function(){
 //==================================================================
 //==================================================================
     //以下、メインロジック起動
-
 
     featureSet = function (number_of_sheets) {
 
@@ -753,6 +691,7 @@ let calc_for_sheets_Checker = (function(){
         }
     };
 
+
     let processResultDisplay = function (target_dom) {
 
         return function () {
@@ -844,7 +783,6 @@ let calc_for_sheets_Checker = (function(){
     }
 
     let checkParseResult = function (data) {
-        console.log(data)
         let denominator = DENOMINATOR();
         _.map(data, function(value, key){
 
@@ -877,14 +815,14 @@ let calc_for_sheets_Checker = (function(){
 
     let modalWrapper = function (data) {
         if (open_modal_flag == true) {
-            return;
+            return data;
         }
         return modal(data);
     }
     
     let innerProcess = function (func1) {
         let inner_funcs = [
-            processResultDisplay(view_obj.targetDom),
+            processResultDisplay(modalContent),
         ];
 
         asyncProccess_obj.start(view_obj.animation.loading(), func1, inner_funcs)
@@ -903,11 +841,8 @@ let calc_for_sheets_Checker = (function(){
             event: "click",
             handler: "calcNumbersOfSheets",
             resource: resource,//methodsで使う共通の引数の型
-            // methods: [getFormValues(formValue), modalWrapper, sheets(innerProcess).calcStart]
             methods: [getFormValues(formValue), checkParseResult, modalWrapper, sheets(innerProcess).calcStart]
-
         },
-
         {
             dom_key: "#js-Close-Modal",
             event: "click",
