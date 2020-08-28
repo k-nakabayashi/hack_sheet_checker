@@ -285,7 +285,7 @@ let calc_for_sheets_Checker = (function(){
                     },
 
                     delay: function() {
-                        return 2000;
+                        return 200000;
                     },
 
 

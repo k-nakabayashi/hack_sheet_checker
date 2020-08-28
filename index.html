@@ -34,10 +34,10 @@
 		// }
 	}
 </script>
-	
-<link rel="stylesheet" href="scss/app.css">
+<script src="https://cdn.jsdelivr.net/npm/lazyload@2.0.0-rc.2/lazyload.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.20/lodash.min.js"></script>
 <script src="js/sheetChecker.js" defer></script>
+<link rel="stylesheet" href="scss/app.css">
 <!--[if lt IE 9]>
 <script src="//cdn.jsdelivr.net/html5shiv/3.7.2/html5shiv.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/respond.js/1.4.2/respond.min.js"></script>
@@ -50,7 +50,7 @@
 		<h1 class="logo">
 			<picture>
 				<source media="(min-width: 960px)" type="image/jpeg" srcset="img/title_pc.jpg">
-  				<img src="img/title_sp.jpg" width="100%" alt="いろいろフィット枚数チェッカー">
+  				<img src="img/title_sp.jpg" data-src="img/title_sp.jpg" width="100%" alt="いろいろフィット枚数チェッカー" class="lazyLoad" loading="lazy">
 			</picture>  
 		</h1>
 	</header>
@@ -61,7 +61,7 @@
 				<p>組み合わせて<br>フィットして。</p>
 				<p>お好きな場所の必要な枚数が簡単にわかる計算機です。購入前のご検討や購入後の設置時にお役立て下さい。</p>
 			</div>
-			<img src="img/panel_img.jpg" width="100%" alt="パネル">
+			<img src="img/panel_img.jpg" data-src="img/panel_img.jpg" width="100%" alt="パネル" class="lazyLoad" loading="lazy">
 		</div>
 		<div>
 			<div class="text-02">
@@ -82,7 +82,7 @@
 										<div class="output-area">
 											<div class="output-img c-Img-Area">
 												<div class="output-panel01 a-Img">
-													<img src="img/panel_img-01.jpg" width="100%" alt="パネル" id="js-Pannel-Img">
+													<img id="js-Pannel-Img" src="img/panel_img-01.jpg" data-src="img/panel_img-01.jpg" width="100%" alt="パネル" class="lazyLoad" loading="lazy">
 												</div>
 												<div class="output-text01">
 												<p class="panel01" id="js-Num-Sheets"></p>
@@ -98,7 +98,7 @@
 												<p class="text-ttl02">おすすめのセット</p>
 												<div class="output-thumb">
 													<p class="prods-thumb">
-														<img class="output-thumb" src="img/thumb12.png" id="js-Thumb">
+														<img id="js-Thumb" class="output-thumb lazyLoad" src="img/thumb12.png" data-src="img/thumb12.png" loading="lazy">
 													</p>
 													<div class="text-link">
 														<p class="text-name01">
@@ -129,7 +129,7 @@
 											</div>
 										</div>
 									</div>
-									<p>loading</p>
+									<span class="a-Sub">loading</span>
 								</div>
 
 							</div>

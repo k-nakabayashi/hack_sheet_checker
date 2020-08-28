@@ -342,6 +342,10 @@
   text-align: center;
 }
 
+.l-Checker .c-Modal__loading .a-Sub {
+  font-size: 0.7em;
+}
+
 .l-Checker .c-Modal__loading .a-Rotate {
   display: inline-block;
 }
