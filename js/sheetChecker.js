@@ -90,6 +90,7 @@ let calc_for_sheets_Checker = (function(){
             console.log($(target.key));
             $(target.key).text(target.message);
         })
+        calc_process_flag = false;
         initError();
     }
 
