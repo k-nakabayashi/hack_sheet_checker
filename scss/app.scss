@@ -108,12 +108,13 @@
         }
 
         .a-Btn.forClose {
-            position: absolute;
-            right: 0;
+            position: fixed;
+            right: 0%;
         }
     }
 
     .m-Modal__inner {
+        height: 100%;
         .a-Btn.forClose {
             z-index: 1;
         }
@@ -343,7 +344,7 @@
         right: 0;
         margin: auto;
         height: 100px;
-        width: 100vw;
+        width: 200px;
         color: #fff;
         text-align: center;
         .a-Sub {
@@ -353,7 +354,7 @@
             display: inline-block;
         }
         .c-Flash {
-            margin-top: 30px;
+            margin-top: 60px;
             margin-bottom: 10px;
 
             > * {
@@ -408,5 +409,12 @@
         #js-Error {
             display: none;
         }
+    }
+
+    //遅延読み込み
+    .isLazy:not(.isActive) {
+        opacity: 0;
+        display: none;
+        transform: translateX(-100%);
     }
 }

@@ -285,7 +285,7 @@ let calc_for_sheets_Checker = (function(){
                     },
 
                     delay: function() {
-                        return 200000;
+                        return 2000;
                     },
 
 
@@ -436,7 +436,6 @@ let calc_for_sheets_Checker = (function(){
                 area: $("#js-Sheet-Area"),
                 link_top: $("#js-Feature-Link--forTop"),
                 link_bottom: $("#js-Feature-Link--forBottom"),
-                thumb: $("#js-Thumb"),
                 pannel: $("#js-Pannel-Img"),
             }
         }());
@@ -505,6 +504,10 @@ let calc_for_sheets_Checker = (function(){
         initAdviceDom = function () {
             _.map(targetDom, function(dom){
                 dom.html("");
+                //アクティブ画像を非アクティブ
+                $(".isLazy").each(function(){
+                    $(this).removeClass("isActive");
+                });
             })
         }
 
@@ -572,7 +575,7 @@ let calc_for_sheets_Checker = (function(){
         let bottom_text = "18mm厚4.5畳用";
         let items = {
             set12: {
-                thumb: "img/thumb12.png",
+                thumb: "#js-Thumb12",
                 top: {
                     text: `${top_text}<br>12枚セット`,
                     cost: "2,990",
@@ -585,7 +588,7 @@ let calc_for_sheets_Checker = (function(){
                 },
             },
             set25: {
-                thumb: "img/thumb25.png",
+                thumb: "#js-Thumb25",
                 top: {
                     text: `${top_text}<br>25枚セット`,
                     cost: "2,990",
@@ -599,13 +602,12 @@ let calc_for_sheets_Checker = (function(){
             },
 
             set36: {
-                thumb: "img/thumb36.png",
+                thumb: "#js-Thumb36",
                 top: {
                     text: `${top_text}<br>36枚セット`,
                     cost: "2,990",
                     href: "/36_top",
                 },
-                thumb: "img/thumb12.png",
                 bottom: {
                     text: `${bottom_text}<br>36枚セット`,
                     cost: "3,990",
@@ -614,7 +616,7 @@ let calc_for_sheets_Checker = (function(){
             },
 
             set48: {
-                thumb: "img/thumb48.png",
+                thumb: "#js-Thumb48",
                 top: {
                     text: `${top_text}<br>48枚セット`,
                     cost: "2,990",
@@ -628,7 +630,7 @@ let calc_for_sheets_Checker = (function(){
             },
 
             set64: {
-                thumb: "img/thumb64.png",
+                thumb: "#js-Thumb64",
                 top: {
                     text: `${top_text}<br>64枚セット`,
                     cost: "2,990",
@@ -695,32 +697,36 @@ let calc_for_sheets_Checker = (function(){
     let processResultDisplay = function (target_dom) {
 
         return function () {
-
+     
                 let result_page,
                     number_of_sheets,
                     area,
                     feature;
 
+                $(".isLazy").each(function(){
+                    $(this).removeClass("isActive");
+                });
+                
                 result_page = function () {
                     let b = remainder_result["b"];
                     let c = remainder_result["c"];
 
                     if (b === true && c === true) {
                         return {
-                            img: "img/panel_img-01.jpg",
+                            img: "#js-Pannel-Img1",
                             title: "設置するときは...",
                             top: "適宜サイドパーツをカットして<br>調節できます。",
                         };
                     } else if (b === false && c === false) {
                         return {
-                            img: "img/panel_img-02.jpg",
+                            img: "#js-Pannel-Img2",
                             title: "カットするときは...",
                             top: `タテの最後のマス：<span>${result_obj["b"]}mm</span>`,
                             bottom: `ヨコの最後のマス：<span>${result_obj["c"]}mm</span>`,
                         };
                     } else {
                         return {
-                            img: "img/panel_img-02.jpg",
+                            img: "#js-Pannel-Img2",
                             title: "カットするときは...",
                             top: `タテの最後のマス：<span>${result_obj["b"]}mm</span>`,
                             bottom: "ヨコの辺は<br>サイドパーツをカットして調節できます。",
@@ -730,7 +736,8 @@ let calc_for_sheets_Checker = (function(){
 
                 (function(){
 
-                    target_dom.pannel.attr("src", result_page["img"])
+                    // target_dom.pannel.attr("src", result_page["img"])
+                    $(result_page["img"]).addClass("isActive");
                     //枚数表示
                     number_of_sheets = result_obj["a"];
                     target_dom.number_of_sheets.html(`${number_of_sheets}<span>枚</span>`);
@@ -757,8 +764,8 @@ let calc_for_sheets_Checker = (function(){
                     )
                     target_dom.link_bottom.attr("href", feature.bottom.text.href);
 
-          
-                    target_dom.thumb.attr("src", feature.thumb)
+
+                    $(feature.thumb).addClass("isActive");
 
                 }());
 

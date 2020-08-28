@@ -2,11 +2,12 @@
 
 
 ## ブレイクポイント
-@mixin media-md：IPad縦以上
-@mixin media-md-max：IPad縦未満
+
+- @mixin media-md：IPad縦以上
+- @mixin media-md-max：IPad縦未満
 
 ## 横幅 : max-width: 1024px;
-.u-Container: max-width: 1024px;
+- .u-Container: max-width: 1024px;
 
 ## アニメーション
 
@@ -47,6 +48,14 @@
 - #js-Error, #js-Error-forHeight, #js-Error-forWidth
 - エラーメッセージを表示
 
+画像切り替え
+```css
+.isLazy:not(.isActive) {
+    opacity: 0;
+    display: none;
+    transform: translateX(-100%);
+}
+```
 
 ```javascript
 //モーダル内部の計算結果を表示
@@ -59,8 +68,6 @@ targetDom = (function () {
         area: $("#js-Sheet-Area"),
         link_top: $("#js-Feature-Link--forTop"),
         link_bottom: $("#js-Feature-Link--forBottom"),
-        thumb: $("#js-Thumb"),
-        pannel: $("#js-Pannel-Img"),
     }
 }());
 ```
