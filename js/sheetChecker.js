@@ -95,15 +95,11 @@ let calc_for_sheets_Checker = (function(){
     // }
 
     setError = function (message, target = null) {
-        error = "両辺共に" + message;
+        error = "⚠両辺共に" + message;
         if (target != null) {
-            error_for_pc[target]["message"] = message;
+            error_for_pc[target]["message"] = "⚠" + message;
         }
     }
-    // initError = function() {
-    //     calc_process_flag = false;
-    //     error = null;
-    // }
 
     initError = function() {
         error = null;
@@ -384,6 +380,7 @@ let calc_for_sheets_Checker = (function(){
         let command_name = "getFormValues";
 
         let excute = function (retrieveFormValues) {
+
             let return_obj = {};
             let values = retrieveFormValues()
             
@@ -392,13 +389,10 @@ let calc_for_sheets_Checker = (function(){
                 return_obj[key] = result;
             });
             if (error == null) {
-                displayNoError();
                 form_data = _.clone(return_obj);
                 return return_obj;
             }
 
-            // $(error_key).text(error);
-            // initError();
             displayError();
             return false;
         }
@@ -571,21 +565,20 @@ let calc_for_sheets_Checker = (function(){
             },
     
             calcNumbersOfSheets: function (target, btn_obj) {
+
+                initError();
                 if (calc_process_flag == true) {
                     return;
                 }
                 calc_process_flag = true;
 
-                // if (target.dom.hasClass("isActive")) {
-                //     return;
-                // }
                 target.dom.addClass("isActive").on('transitionend webkitTransitionEnd',function(){
                     setTimeout(function(){
                         target.dom.removeClass("isActive");
                     }, 500);
                 })
 
-                let result = pipelineWithResrouce(btn_obj.resource, btn_obj.methods)();
+                pipelineWithResrouce(btn_obj.resource, btn_obj.methods)();
             },
 
             closeModal: function (target, btn_obj) {
@@ -719,8 +712,8 @@ let calc_for_sheets_Checker = (function(){
 
     error_key = "#js-Error"
     errors = {
-        ERROR1: "⚠数字を入力してください。",
-        ERROR2: "25mm以上長さが必要です。",
+        ERROR1: "数字を入力してください。",
+        ERROR2: "420mm以上長さが必要です。",
         ERROR3: "整数で記入してください。",
     }
     
@@ -764,12 +757,27 @@ let calc_for_sheets_Checker = (function(){
 
                     if (b === true && c === true) {
                         return {
+                            pattern: "c",
                             img: "#js-Pannel-Img1",
                             title: "設置するときは...",
                             top: "適宜サイドパーツをカットして<br>調節できます。",
                         };
                     } else if (b === false && c === false) {
+                        let inner_result = result_obj["b"] + result_obj["c"];
+                        
+                        if (inner_result < 420) {
+                            //A-1
+                            return {
+                                pattern: "a-1",
+                                img: "#js-Pannel-Img2",//あと変更
+                                title: "カットするときは...(a-1)",
+                                top: `タテの最後のマス(a-1)：<span>${result_obj["b"]}mm</span>`,
+                                bottom: `ヨコの最後のマス(a-1)：<span>${result_obj["c"]}mm</span>`,
+                            }
+                        }
+                        //A-2
                         return {
+                            pattern: "a-2",
                             img: "#js-Pannel-Img2",
                             title: "カットするときは...",
                             top: `タテの最後のマス：<span>${result_obj["b"]}mm</span>`,
@@ -777,6 +785,7 @@ let calc_for_sheets_Checker = (function(){
                         };
                     } else {
                         return {
+                            pattern: "b",
                             img: "#js-Pannel-Img2",
                             title: "カットするときは...",
                             top: `タテの最後のマス：<span>${result_obj["b"]}mm</span>`,
@@ -790,7 +799,18 @@ let calc_for_sheets_Checker = (function(){
                     // target_dom.pannel.attr("src", result_page["img"])
                     $(result_page["img"]).addClass("isActive");
                     //枚数表示
-                    number_of_sheets = result_obj["a"];
+                    if (result_page.pattern === "a-1") {
+                        let x = result_obj["x"];
+                        let y = result_obj["y"];
+                        if (x < y) { 
+                            number_of_sheets = x * ( y - 1 );  
+                        } else {
+                            number_of_sheets = ( x - 1 ) * y;  
+                        }
+                    } else {
+                        number_of_sheets = result_obj["a"];
+                    }
+
                     target_dom.number_of_sheets.html(`${number_of_sheets}<span>枚</span>`);
 
                     //面積表示
@@ -894,7 +914,6 @@ let calc_for_sheets_Checker = (function(){
             event: "click",
             handler: "calcNumbersOfSheets",
             resource: resource,//methodsで使う共通の引数の型
-            // methods: [getFormValues(formValue), modalWrapper, sheets(innerProcess).calcStart]
             methods: [getFormValues(formValue), checkParseResult, modalWrapper, sheets(innerProcess).calcStart]
 
         },

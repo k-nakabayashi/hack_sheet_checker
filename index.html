@@ -12,28 +12,6 @@
 <link rel="stylesheet" href="css/font.css">
 <link rel="stylesheet" href="css/style.css">
 <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
-<script type="text/javascript">
-		function CountPanel() {
-		// var panel_size=11.8; // ベースのパネルサイズです。正方形で縦横は同一としています。
-		// var panel_size=20; // ベースのパネルサイズです。正方形で縦横は同一としています。
-		// var vartical = document.getElementById('vertical');
-		// var horizontal = document.getElementById('horizontal');
-
-		// if(vartical.value.match(/[0-9]/g) && horizontal.value.match(/[0-9]/g)) { //数値以外の文字列が含まれている場合、スルー
-		// 	if(panel_size <= vartical.value && panel_size <= horizontal.value){ //縦、横いずれかがベースパネルサイズより小さい場合は、1枚も置けないとみなす
-		// 		// panel_size で値を除算
-		// 		var panel_var = Math.floor(vartical.value / panel_size);
-		// 		var panel_hor = Math.floor(horizontal.value/ panel_size);
-		// 		// 縦×横
-		// 		var panel_count = panel_var*panel_hor;
-		// 		document.getElementById('panelcount').innerHTML = panel_count;
-		// 	}else{
-		// 		// ベースより低い数値の場合は、0とする
-		// 		document.getElementById('panelcount').innerHTML = 0;
-		// 	}
-		// }
-	}
-</script>
 <script src="https://cdn.jsdelivr.net/npm/lazyload@2.0.0-rc.2/lazyload.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.20/lodash.min.js"></script>
 <script src="js/sheetChecker.js" defer></script>
@@ -143,15 +121,15 @@
 							<div class="input-area">
 								<p>
 									<label>❶</label>
-									<input class="a-Input" type="text" id="height" size="10" maxlength="8" value="0">mm
+									<input class="a-Input" type="text" id="height" size="10" maxlength="8" value="" placeholder="0" pattern="\d*">mm
 								</p>
-								<p class="a-Text" id="js-Error-forHeight"></p>
+								<p class="a-Text forError" id="js-Error-forHeight"></p>
 								<p>
 									<label>❷</label>
-									<input class="a-Input" type="text" id="width" size="10" maxlength="8" value="0">mm
+									<input class="a-Input" type="text" id="width" size="10" maxlength="8" value="" placeholder="0" pattern="\d*">mm
 								</p>
-								<p class="a-Text" id="js-Error-forWidth"></p>
-								<p class="a-Text" id="js-Error"></p>
+								<p class="a-Text forError" id="js-Error-forWidth"></p>
+								<p class="a-Text forError" id="js-Error"></p>
 							</div>
 						
 							<div class="u-Btn-Wrapper">

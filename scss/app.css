@@ -223,6 +223,10 @@
   animation-iteration-count: infinite;
 }
 
+.l-Checker .a-Text.forError {
+  color: red;
+}
+
 .l-Checker .a-Input {
   text-align: center;
 }

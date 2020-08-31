@@ -212,6 +212,11 @@
     }
     //////////////////////////////////////////////////////
     //Atomic
+    .a-Text {
+        &.forError {
+            color: red;
+        }
+    }
     .a-Input {
         text-align: center;
     }
