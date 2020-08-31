@@ -12,7 +12,6 @@ let calc_for_sheets_Checker = (function(){
         start_deffered_obj = null,
         time_func = null,
         open_modal_flag = false,
-        modalContent = null,
         calc_process_flag = false,
 
     
@@ -46,6 +45,16 @@ let calc_for_sheets_Checker = (function(){
     //エラー
         error = null,
         error_for_pc,
+        // error_for_pc = {
+        //     height: {
+        //         key: "#js-Error-forHeight",
+        //         message: "",
+        //     },
+        //     width: {
+        //         key: "#js-Error-forWidth",
+        //         message: "",
+        //     }
+        // };
         error_key,
         errors,
 
@@ -54,9 +63,13 @@ let calc_for_sheets_Checker = (function(){
         DENOMINATOR = function () {
             return 25;
         },
-         NUMERATOR = function() {
+        NUMERATOR = function() {
             return 435;
-        };
+        },
+        TARGET_CALC = function() {
+            return 420;
+        },
+        checkParseResult;
 //==================================================================
 //==================================================================
 //==================================================================
@@ -95,8 +108,11 @@ let calc_for_sheets_Checker = (function(){
     // }
 
     setError = function (message, target = null) {
-        error = "⚠両辺共に" + message;
-        if (target != null) {
+        if (error === null) {
+            error = "⚠両辺共に" + message;
+        }
+       
+        if (error_for_pc[target]["message"] == null && target != null) {
             error_for_pc[target]["message"] = "⚠" + message;
         }
     }
@@ -106,15 +122,15 @@ let calc_for_sheets_Checker = (function(){
         error_for_pc = {
             height: {
                 key: "#js-Error-forHeight",
-                message: "",
+                message: null,
             },
             width: {
                 key: "#js-Error-forWidth",
-                message: "",
+                message: null,
             }
         };
     }
-
+    initError();
 
 
     pipeline = function () {
@@ -281,7 +297,7 @@ let calc_for_sheets_Checker = (function(){
         //     width: values.height,
         // }
         excute = function (/**target**/) {
-            inner_process(sheets_utils_obj.process.calc)
+            inner_process(sheets_utils_obj.process.calc);
         }
         
         let return_obj = {};
@@ -300,9 +316,8 @@ let calc_for_sheets_Checker = (function(){
                         _.map(form_data, function(value, key){
                             return utils.baseCalc(key, value)
                         });
-
+                    
                         utils.calcAllSheet();
-
                         let keys = Object.keys(result_obj);
                         for (let i = 0; i < keys.length; ++i) {
                             $("#js-value-" + keys[i]).text(result_obj[keys[i]])
@@ -321,7 +336,6 @@ let calc_for_sheets_Checker = (function(){
             },
 
             baseCalc: function (key, value) {
-                
                 ////////////////////////////////////////////////
                 // %435
                 let remainder = (value - denominator)% numerator;
@@ -380,16 +394,17 @@ let calc_for_sheets_Checker = (function(){
         let command_name = "getFormValues";
 
         let excute = function (retrieveFormValues) {
-
             let return_obj = {};
-            let values = retrieveFormValues()
-            
+            let values = retrieveFormValues();
+
             _.map(values, function (value, key) {
-                let result = validate(value);
-                return_obj[key] = result;
+                return_obj[key] = validate(value, key);
             });
+            //以下、判定
             if (error == null) {
                 form_data = _.clone(return_obj);
+                initError();
+                displayNoError();
                 return return_obj;
             }
 
@@ -406,10 +421,11 @@ let calc_for_sheets_Checker = (function(){
             })
         }
     
-        checkType = function (pattern, target) {
+        checkType = function (pattern, target, key) {
             if (pattern.test(target)) {
                 return true;
             }
+            setError(errors["ERROR1"], key);
             return false;
         }
         
@@ -417,17 +433,43 @@ let calc_for_sheets_Checker = (function(){
         //String target 
         //return undifined or Number
         validate = function (value, key) {
-            try {
-                if (checkType(/^([1-9]\d*|0*).??([1-9]\d*|0*)$/, value)) {
-                    return parseFloat(value, 10);
-                } 
 
-                //全角数字判定
-                if (checkType(/^([０-９]*)$/, value)) {
-                    value = toHalfWidth(value);
-                    return parseInt(value, 10);
+            try {
+                let result_value = null;
+                console.log(value)
+                if (value == NaN || value == null || value == "") {
+                    setError(errors["ERROR1"], key);
+                    return;
                 }
-                setError(errors["ERROR1"], key);
+
+                if (checkType(/^([1-9]\d*|0*).??([1-9]\d*|0*)$/, value, key)) {
+                    result_value = parseFloat(value, 10);
+                    if (isNaN(result_value)) {
+                        setError(errors["ERROR1"], key);
+                    }
+
+                } else if (checkType(/^([０-９]*)$/, value, key)) {
+                    alert(2)
+                    value = toHalfWidth(value);
+                    result_value = parseInt(value, 10);
+
+                } else {
+                    setError(errors["ERROR1"], key);
+                    return;
+                }
+                
+                if (!Number.isInteger(result_value)) {
+                    console.log(key + " : " + result_value)
+                    setError(errors["ERROR3"], key);
+                    return;
+                }
+                if (result_value < TARGET_CALC()) {
+                    setError(errors["ERROR2"], key);
+                    return;
+                }
+
+                return result_value;
+
             } catch(e) {
                 setError(errors["ERROR1"], key);
             }
@@ -577,7 +619,6 @@ let calc_for_sheets_Checker = (function(){
                         target.dom.removeClass("isActive");
                     }, 500);
                 })
-
                 pipelineWithResrouce(btn_obj.resource, btn_obj.methods)();
             },
 
@@ -605,7 +646,6 @@ let calc_for_sheets_Checker = (function(){
     sheets_utils_obj = sheets_utils();
     asyncProccess_obj = asyncProccess();
 
-    modalContent = view_obj.targetDom;
 //==================================================================
 //==================================================================
 //==================================================================
@@ -720,7 +760,6 @@ let calc_for_sheets_Checker = (function(){
     let formValue = function () {
         let height = $("#height").val();
         let width = $("#width").val();
-
         return {
             height: height,
             width: width,
@@ -764,7 +803,6 @@ let calc_for_sheets_Checker = (function(){
                         };
                     } else if (b === false && c === false) {
                         let inner_result = result_obj["b"] + result_obj["c"];
-                        
                         if (inner_result < 420) {
                             //A-1
                             return {
@@ -852,25 +890,15 @@ let calc_for_sheets_Checker = (function(){
             };
     }
 
-    let checkParseResult = function (data) {
+    checkParseResult = function (data) {
         let denominator = DENOMINATOR();
-        _.map(data, function(value, key){
 
-            if (!Number.isInteger(value)) {
-                setError(errors["ERROR3"], key);
-                return false;
-            }
-            if (value < denominator) {
-                setError(errors["ERROR2"], key);
-                return false;
-            }
-        });
-        if (error != null) {
-            displayError();
-            return false;
+        if (!Number.isInteger(data.value)) {
+            setError(errors["ERROR3"], data.key);
         }
-        
-        return data;
+        if (value < denominator) {
+            setError(errors["ERROR2"], data.key);
+        }
     }
 
     //各種ボタンのイベント設定
@@ -914,7 +942,7 @@ let calc_for_sheets_Checker = (function(){
             event: "click",
             handler: "calcNumbersOfSheets",
             resource: resource,//methodsで使う共通の引数の型
-            methods: [getFormValues(formValue), checkParseResult, modalWrapper, sheets(innerProcess).calcStart]
+            methods: [getFormValues(formValue), modalWrapper, sheets(innerProcess).calcStart]
 
         },
 
