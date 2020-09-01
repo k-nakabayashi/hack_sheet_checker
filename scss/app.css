@@ -48,7 +48,7 @@
   right: 0;
   width: 100vw;
   height: 100%;
-  background: rgba(128, 128, 128, 0.5);
+  background: rgba(128, 128, 128, 0.9);
   z-index: 1;
 }
 
@@ -269,21 +269,21 @@
 }
 
 .l-Checker .a-Btn.withChange.forBack .ep-Text {
-  background: orange;
+  background: #ff8731;
 }
 
 .l-Checker .a-Btn.withChange.forBack .ep-Text .ep-Text_inner {
   transition-property: color, background;
   transition-duration: 0.5s;
   background: #fff;
-  color: orange;
+  color: #ff8731;
 }
 
 @media screen and (max-width: 768px) {
   .l-Checker .a-Btn.withChange.forBack:active .ep-Text .ep-Text_inner {
     transition-property: color, background;
     transition-duration: 0.5s;
-    background: orange;
+    background: #ff8731;
     color: #fff !important;
   }
 }
@@ -292,27 +292,27 @@
   .l-Checker .a-Btn.withChange.forBack:hover .ep-Text .ep-Text_inner {
     transition-property: color, background;
     transition-duration: 0.5s;
-    background: orange;
+    background: #ff8731;
     color: #fff !important;
   }
 }
 
 .l-Checker .a-Btn.withChange.forCalc .ep-Text {
-  background: skyblue;
+  background: #4bc2fa;
 }
 
 .l-Checker .a-Btn.withChange.forCalc .ep-Text .ep-Text_inner {
   transition-property: color, background;
   transition-duration: 0.5s;
   background: #fff;
-  color: skyblue;
+  color: #4bc2fa;
 }
 
 @media screen and (max-width: 768px) {
   .l-Checker .a-Btn.withChange.forCalc:active .ep-Text .ep-Text_inner {
     transition-property: color, background;
     transition-duration: 0.5s;
-    background: skyblue;
+    background: #4bc2fa;
     color: #fff !important;
   }
 }
@@ -321,7 +321,7 @@
   .l-Checker .a-Btn.withChange.forCalc:hover .ep-Text .ep-Text_inner {
     transition-property: color, background;
     transition-duration: 0.5s;
-    background: skyblue;
+    background: #4bc2fa;
     color: #fff !important;
   }
 }
@@ -346,6 +346,27 @@
   .l-Checker .c-Modal-Content .c-Img-Area .a-Img img {
     max-height: 40vh;
   }
+}
+
+.l-Checker .c-Modal-Content .c-Link > *:not(:first-child) {
+  margin-top: 16px;
+}
+
+.l-Checker .c-Modal-Content .c-Link a {
+  color: #fff;
+}
+
+.l-Checker .c-Modal-Content .c-Link .a-Txt > *:not(:first-child) {
+  margin-top: 4px;
+  display: inline-block;
+}
+
+.l-Checker .c-Modal-Content .c-Link .a-Txt .ep-Txt1, .l-Checker .c-Modal-Content .c-Link .a-Txt .ep-Txt2 {
+  border-bottom: #fff 1px solid;
+}
+
+.l-Checker .c-Modal-Content .c-Link .a-Txt .ep-Txt3 {
+  background: red;
 }
 
 .l-Checker .c-Modal__loading {

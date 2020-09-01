@@ -671,12 +671,12 @@ let calc_for_sheets_Checker = (function(){
             set12: {
                 thumb: "#js-Thumb12",
                 top: {
-                    text: `${top_text}<br>12枚セット`,
+                    text: `<span class="ep-Txt1">${top_text}</span><br><span class="ep-Txt2">12枚セット</span>`,
                     cost: "2,990",
                     href: "/12_top",
                 },
                 bottom: {
-                    text: `${bottom_text}<br>12枚セット`,
+                    text: `<span class="ep-Txt1">${bottom_text}</span><br><span class="ep-Txt2">12枚セット</span>`,
                     cost: "3,990",
                     href: "/12_bottom",
                 },
@@ -684,12 +684,12 @@ let calc_for_sheets_Checker = (function(){
             set25: {
                 thumb: "#js-Thumb25",
                 top: {
-                    text: `${top_text}<br>25枚セット`,
+                    text: `<span class="ep-Txt1">${top_text}</span><br><span class="ep-Txt2">25枚セット</span>`,
                     cost: "2,990",
                     href: "/25_top",
                 },
                 bottom: {
-                    text: `${bottom_text}<br>25枚セット`,
+                    text: `<span class="ep-Txt1">${bottom_text}</span><br><span class="ep-Txt2">25枚セット</span>`,
                     cost: "3,990",
                     href: "/25_bottom",
                 },
@@ -698,12 +698,12 @@ let calc_for_sheets_Checker = (function(){
             set36: {
                 thumb: "#js-Thumb36",
                 top: {
-                    text: `${top_text}<br>36枚セット`,
+                    text: `<span class="ep-Txt1">${top_text}</span><br><span class="ep-Txt2">36枚セット</span>`,
                     cost: "2,990",
                     href: "/36_top",
                 },
                 bottom: {
-                    text: `${bottom_text}<br>36枚セット`,
+                    text: `<span class="ep-Txt1">${bottom_text}</span><br><span class="ep-Txt2">36枚セット</span>`,
                     cost: "3,990",
                     href: "/36_bottom",
                 },
@@ -712,12 +712,12 @@ let calc_for_sheets_Checker = (function(){
             set48: {
                 thumb: "#js-Thumb48",
                 top: {
-                    text: `${top_text}<br>48枚セット`,
+                    text: `<span class="ep-Txt1">${top_text}</span><br><span class="ep-Txt2">48枚セット</span>`,
                     cost: "2,990",
                     href: "/48_top",
                 },
                 bottom: {
-                    text: `${bottom_text}<br>48枚セット`,
+                    text: `<span class="ep-Txt1">${bottom_text}</span><br><span class="ep-Txt2">48枚セット</span>`,
                     cost: "3,990",
                     href: "/48_bottom",
                 },
@@ -726,12 +726,12 @@ let calc_for_sheets_Checker = (function(){
             set64: {
                 thumb: "#js-Thumb64",
                 top: {
-                    text: `${top_text}<br>64枚セット`,
+                    text: `<span class="ep-Txt1">${top_text}</span><br><span class="ep-Txt2">64枚セット</span>`,
                     cost: "2,990",
                     href: "/64_top",
                 },
                 bottom: {
-                    text: `${bottom_text}<br>64枚セット`,
+                    text: `<span class="ep-Txt1">${bottom_text}</span><br><span class="ep-Txt2">64枚セット</span>`,
                     cost: "3,990",
                     href: "/64_bottom",
                 },
@@ -873,12 +873,12 @@ let calc_for_sheets_Checker = (function(){
                     let bottom = feature.bottom;
 
                     target_dom.link_top.html(
-                        `${top.text}<span>￥${top.cost}税込</span>`
+                        `${top.text}<br><span class="ep-Txt3">￥${top.cost}税込</span>`
                     )
                     target_dom.link_top.attr("href", top.text.href);
                     
                     target_dom.link_bottom.html(
-                        `${bottom.text}<span>￥${bottom.cost}税込</span>`
+                        `${bottom.text}<br><span class="ep-Txt3">￥${bottom.cost}税込</span>`
                     )
                     target_dom.link_bottom.attr("href", feature.bottom.text.href);
 
