@@ -212,13 +212,25 @@
     }
     //////////////////////////////////////////////////////
     //Atomic
+    @keyframes fadeIn {
+        0% {
+            opacity: 0;
+        }
+        100% {
+            opacity: 1;
+        }
+    }
     .a-Text {
         &.forError {
             color: red;
+
         }
     }
     .a-Input {
         text-align: center;
+        &::placeholder {
+            opacity: 0.7;
+        }
     }
 
     .a-Btn {

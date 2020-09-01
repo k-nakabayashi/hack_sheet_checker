@@ -111,7 +111,6 @@ let calc_for_sheets_Checker = (function(){
         if (error === null) {
             error = "⚠両辺共に" + message;
         }
-       
         if (error_for_pc[target]["message"] == null && target != null) {
             error_for_pc[target]["message"] = "⚠" + message;
         }
@@ -387,24 +386,25 @@ let calc_for_sheets_Checker = (function(){
         
         let toHalfWidth,
             validate,
-            checkType;
+            checkType,
+            equalForm;
         //==================================================================
         //==================================================================
 
         let command_name = "getFormValues";
 
         let excute = function (retrieveFormValues) {
+   
             let return_obj = {};
             let values = retrieveFormValues();
 
             _.map(values, function (value, key) {
                 return_obj[key] = validate(value, key);
             });
+
             //以下、判定
             if (error == null) {
                 form_data = _.clone(return_obj);
-                initError();
-                displayNoError();
                 return return_obj;
             }
 
@@ -425,18 +425,27 @@ let calc_for_sheets_Checker = (function(){
             if (pattern.test(target)) {
                 return true;
             }
-            setError(errors["ERROR1"], key);
             return false;
         }
-        
+        equalForm = function (tmp_form_data) {
+            console.log("tmp form")
+            console.log(tmp_form_data)
+            console.log("old form")
+            console.log(form_data)
+            let result = (form_data["height"] == tmp_form_data["height"] &&
+            form_data["width"] == tmp_form_data["width"])? true: false;
+
+            console.log(result);
+            return result
+        }
         //type=numberからの受け取り値って、何型？
         //String target 
         //return undifined or Number
         validate = function (value, key) {
-
+            // console.log(value);
             try {
                 let result_value = null;
-                console.log(value)
+
                 if (value == NaN || value == null || value == "") {
                     setError(errors["ERROR1"], key);
                     return;
@@ -449,17 +458,15 @@ let calc_for_sheets_Checker = (function(){
                     }
 
                 } else if (checkType(/^([０-９]*)$/, value, key)) {
-                    alert(2)
                     value = toHalfWidth(value);
                     result_value = parseInt(value, 10);
-
+ 
                 } else {
                     setError(errors["ERROR1"], key);
                     return;
                 }
                 
                 if (!Number.isInteger(result_value)) {
-                    console.log(key + " : " + result_value)
                     setError(errors["ERROR3"], key);
                     return;
                 }
@@ -607,19 +614,21 @@ let calc_for_sheets_Checker = (function(){
             },
     
             calcNumbersOfSheets: function (target, btn_obj) {
-
                 initError();
-                if (calc_process_flag == true) {
-                    return;
-                }
-                calc_process_flag = true;
+                displayNoError();
+                setTimeout(function(){
+                    if (calc_process_flag == true) {
+                        return;
+                    }
+                    calc_process_flag = true;
 
-                target.dom.addClass("isActive").on('transitionend webkitTransitionEnd',function(){
-                    setTimeout(function(){
-                        target.dom.removeClass("isActive");
-                    }, 500);
-                })
-                pipelineWithResrouce(btn_obj.resource, btn_obj.methods)();
+                    target.dom.addClass("isActive").on('transitionend webkitTransitionEnd',function(){
+                        setTimeout(function(){
+                            target.dom.removeClass("isActive");
+                        }, 500);
+                    })
+                    pipelineWithResrouce(btn_obj.resource, btn_obj.methods)();
+                }, 100)
             },
 
             closeModal: function (target, btn_obj) {
