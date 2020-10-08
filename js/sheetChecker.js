@@ -338,8 +338,13 @@ let calc_for_sheets_Checker = (function(){
                 ////////////////////////////////////////////////
                 // %435
                 let remainder = (value - denominator)% numerator;
-
+                
                 if (key == "height") {
+                    console.log("=============")
+                    console.log(key)
+                    console.log(form_data);
+                    console.log( value +  " : " + denominator + " : " + numerator);
+                    console.log(remainder)
                     result_obj["b"] = remainder;
                 
                 } else if (key == "width") {
@@ -789,7 +794,7 @@ let calc_for_sheets_Checker = (function(){
     let processResultDisplay = function (target_dom) {
 
         return function () {
-     
+       
                 let result_page,
                     number_of_sheets,
                     area,
@@ -831,12 +836,22 @@ let calc_for_sheets_Checker = (function(){
                             bottom: `ヨコの最後のマス：<span>${result_obj["c"]}mm</span>`,
                         };
                     } else {
+                        console.log(result_obj)
+                        var top_text = null;
+                        var bottom_text = null;
+                        if (form_data.height < form_data.width) {
+                            top_text = "タテの辺は<br>サイドパーツをカットして調節できます。";
+                            bottom_text = `ヨコの最後のマス：<span>${result_obj["c"]}mm</span>`;
+                        } else {
+                            top_text = `タテの最後のマス：<span>${result_obj["c"]}mm</span>`;
+                            bottom_text = "ヨコの辺は<br>サイドパーツをカットして調節できます。";
+                        }
                         return {
                             pattern: "b",
                             img: "#js-Pannel-Img2",
                             title: "カットするときは...",
-                            top: `タテの最後のマス：<span>${result_obj["b"]}mm</span>`,
-                            bottom: "ヨコの辺は<br>サイドパーツをカットして調節できます。",
+                            top: top_text,
+                            bottom: bottom_text
                         };
                     }
                 }();
