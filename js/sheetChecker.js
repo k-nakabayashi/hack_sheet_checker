@@ -340,11 +340,6 @@ let calc_for_sheets_Checker = (function(){
                 let remainder = (value - denominator)% numerator;
                 
                 if (key == "height") {
-                    console.log("=============")
-                    console.log(key)
-                    console.log(form_data);
-                    console.log( value +  " : " + denominator + " : " + numerator);
-                    console.log(remainder)
                     result_obj["b"] = remainder;
                 
                 } else if (key == "width") {
@@ -433,21 +428,14 @@ let calc_for_sheets_Checker = (function(){
             return false;
         }
         equalForm = function (tmp_form_data) {
-            console.log("tmp form")
-            console.log(tmp_form_data)
-            console.log("old form")
-            console.log(form_data)
             let result = (form_data["height"] == tmp_form_data["height"] &&
             form_data["width"] == tmp_form_data["width"])? true: false;
-
-            console.log(result);
             return result
         }
         //type=numberからの受け取り値って、何型？
         //String target 
         //return undifined or Number
         validate = function (value, key) {
-            // console.log(value);
             try {
                 let result_value = null;
 
@@ -836,7 +824,6 @@ let calc_for_sheets_Checker = (function(){
                             bottom: `ヨコの最後のマス：<span>${result_obj["c"]}mm</span>`,
                         };
                     } else {
-                        console.log(result_obj)
                         var top_text = null;
                         var bottom_text = null;
                         if (form_data.height < form_data.width) {
