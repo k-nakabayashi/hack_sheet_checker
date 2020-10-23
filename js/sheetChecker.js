@@ -818,7 +818,7 @@ let calc_for_sheets_Checker = (function(){
                         //A-2
                         return {
                             pattern: "a-2",
-                            img: "#js-Pannel-Img2",
+                            img: "#js-Pannel-Img3",
                             title: "カットするときは...",
                             top: `タテの最後のマス：<span>${result_obj["b"]}mm</span>`,
                             bottom: `ヨコの最後のマス：<span>${result_obj["c"]}mm</span>`,
