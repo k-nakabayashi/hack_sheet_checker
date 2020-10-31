@@ -809,7 +809,7 @@ let calc_for_sheets_Checker = (function(){
                             //A-1
                             return {
                                 pattern: "a-1",
-                                img: "#js-Pannel-Img2",//あと変更
+                                img: "#js-Pannel-Img2",
                                 title: "カットするときは...(a-1)",
                                 top: `タテの最後のマス(a-1)：<span>${result_obj["b"]}mm</span>`,
                                 bottom: `ヨコの最後のマス(a-1)：<span>${result_obj["c"]}mm</span>`,
@@ -835,14 +835,14 @@ let calc_for_sheets_Checker = (function(){
                         }
                         return {
                             pattern: "b",
-                            img: "#js-Pannel-Img2",
+                            img: "#js-Pannel-Img3",
                             title: "カットするときは...",
                             top: top_text,
                             bottom: bottom_text
                         };
                     }
                 }();
-
+                
                 (function(){
 
                     // target_dom.pannel.attr("src", result_page["img"])
