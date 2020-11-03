@@ -826,13 +826,17 @@ let calc_for_sheets_Checker = (function(){
                     } else {
                         var top_text = null;
                         var bottom_text = null;
+                        
                         if (form_data.height < form_data.width) {
+                            console.log("11111");
                             top_text = "タテの辺は<br>サイドパーツをカットして調節できます。";
-                            bottom_text = `ヨコの最後のマス：<span>${result_obj["c"]}mm</span>`;
+                            bottom_text = `ヨコの最後のマス：<span>${result_obj["b"]}mm</span>`;
                         } else {
-                            top_text = `タテの最後のマス：<span>${result_obj["c"]}mm</span>`;
+                            console.log("222");
+                            top_text = `タテの最後のマス：<span>${result_obj["b"]}mm</span>`;
                             bottom_text = "ヨコの辺は<br>サイドパーツをカットして調節できます。";
                         }
+                        console.log(result_obj);
                         return {
                             pattern: "b",
                             img: "#js-Pannel-Img3",
