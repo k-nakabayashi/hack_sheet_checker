@@ -828,9 +828,11 @@ let calc_for_sheets_Checker = (function(){
                         var bottom_text = null;
                         
                         if (form_data.height < form_data.width) {
+                            console.log(1111)
                             top_text = "タテの辺は<br>サイドパーツをカットして調節できます。";
                             bottom_text = `ヨコの最後のマス：<span>${result_obj["c"]}mm</span>`;
                         } else {
+                            console.log(222)
                             top_text = `タテの最後のマス：<span>${result_obj["b"]}mm</span>`;
                             bottom_text = "ヨコの辺は<br>サイドパーツをカットして調節できます。";
                         }
