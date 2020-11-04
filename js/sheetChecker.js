@@ -828,11 +828,11 @@ let calc_for_sheets_Checker = (function(){
                         var bottom_text = null;
                         
                         if (form_data.height < form_data.width) {
-                            top_text = "タテの辺は<br>サイドパーツをカットして調節できます。";
-                            bottom_text = `ヨコの最後のマス：<span>${result_obj["c"]}mm</span>`;
+                            top_text = "ヨコの辺は<br>サイドパーツをカットして調節できます。";
+                            bottom_text = `タテの最後のマス：<span>${result_obj["c"]}mm</span>`;
                         } else {
-                            top_text = `タテの最後のマス：<span>${result_obj["b"]}mm</span>`;
-                            bottom_text = "ヨコの辺は<br>サイドパーツをカットして調節できます。";
+                            top_text = `ヨコの最後のマス：<span>${result_obj["b"]}mm</span>`;
+                            bottom_text = "タテの辺は<br>サイドパーツをカットして調節できます。";
                         }
                         return {
                             pattern: "b",
