@@ -791,7 +791,7 @@ let calc_for_sheets_Checker = (function(){
                 $(".isLazy").each(function(){
                     $(this).removeClass("isActive");
                 });
-                
+
                 result_page = function () {
                     let b = remainder_result["b"];
                     let c = remainder_result["c"];
@@ -828,11 +828,11 @@ let calc_for_sheets_Checker = (function(){
                         var bottom_text = null;
                         
                         if (form_data.height < form_data.width) {
-                            top_text = "ヨコの辺は<br>サイドパーツをカットして調節できます。";
-                            bottom_text = `タテの最後のマス：<span>${result_obj["c"]}mm</span>`;
-                        } else {
-                            top_text = `ヨコの最後のマス：<span>${result_obj["b"]}mm</span>`;
+                            top_text = `ヨコの最後のマス：<span>${result_obj["c"]}mm</span>`;
                             bottom_text = "タテの辺は<br>サイドパーツをカットして調節できます。";
+                        } else {
+                            top_text = "ヨコの辺は<br>サイドパーツをカットして調節できます。";
+                            bottom_text = `タテの最後のマス：<span>${result_obj["b"]}mm</span>`;
                         }
                         return {
                             pattern: "b",
@@ -843,7 +843,7 @@ let calc_for_sheets_Checker = (function(){
                         };
                     }
                 }();
-                
+                console.log(result_page["pattern"]);
                 (function(){
 
                     // target_dom.pannel.attr("src", result_page["img"])
@@ -878,12 +878,12 @@ let calc_for_sheets_Checker = (function(){
                     target_dom.link_top.html(
                         `${top.text}<br><span class="ep-Txt3">￥${top.cost}税込</span>`
                     )
-                    target_dom.link_top.attr("href", top.text.href);
+                    target_dom.link_top.attr("href", top.href);
                     
                     target_dom.link_bottom.html(
                         `${bottom.text}<br><span class="ep-Txt3">￥${bottom.cost}税込</span>`
                     )
-                    target_dom.link_bottom.attr("href", feature.bottom.text.href);
+                    target_dom.link_bottom.attr("href", feature.bottom.href);
 
 
                     $(feature.thumb).addClass("isActive");
