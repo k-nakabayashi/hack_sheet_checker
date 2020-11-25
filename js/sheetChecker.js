@@ -883,8 +883,7 @@ let calc_for_sheets_Checker = (function(){
                     target_dom.link_bottom.html(
                         `${bottom.text}<br><span class="ep-Txt3">￥${bottom.cost}税込</span>`
                     )
-                    target_dom.link_bottom.attr("href", feature.bottom.href);
-
+                    target_dom.link_bottom.attr("href", bottom.href);
 
                     $(feature.thumb).addClass("isActive");
 
